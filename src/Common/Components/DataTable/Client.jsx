@@ -125,7 +125,8 @@ const DataTableClient = (props) => {
   const displayColumns = columnsSettings.filter(propEq(true, 'visible')).map(({ id }) => columns.find(propEq(id, 'id')))
 
   // prepare data
-  const displayData = paginate([...data].sort(sortingComparison))
+  const sortedData = [...data].sort(sortingComparison)
+  const displayData = paginate(sortedData)
 
   // selection
   const {
@@ -149,6 +150,7 @@ const DataTableClient = (props) => {
         setSort,
         selected,
         onSelect,
+        sortedData,
         displayData,
         handleSelectAll,
         handleClearSelection,
@@ -161,6 +163,7 @@ const DataTableClient = (props) => {
         handleResetSettings,
         handleSaveSettings,
         columns,
+        displayColumns,
         setColumnsSettings,
         columnsSettings,
       }}
@@ -306,6 +309,8 @@ DataTableClient.propTypes = {
   toSessionStorage: PropTypes.func,
   // columns which should be visible
   listDisplay: PropTypes.arrayOf(PropTypes.string).isRequired,
+  // disable export
+  noExport: PropTypes.bool,
 }
 
 export default DataTableClient

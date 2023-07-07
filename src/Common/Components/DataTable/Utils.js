@@ -28,6 +28,13 @@ export const getValue = (record, field, renderContext) => {
     return getRawValue(record, field)
 }
 
+export const getCsvValue = (record, field, renderContext) => {
+    if (field.csvValue) {
+        return field.csvValue(record, renderContext)
+    }
+    return getRawValue(record, field)
+}
+
 export const getFieldById = (model, fieldId) => model.fields.find(propEq(fieldId, 'id'))
 
 export const createColumnsPropsWithStorage = (

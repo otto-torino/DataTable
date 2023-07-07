@@ -23,6 +23,7 @@ import {
   InputLabel as MuiInputLabel,
   Typography,
   Tooltip,
+  Alert,
 } from '@mui/material'
 import styled from 'styled-components'
 
@@ -91,6 +92,9 @@ export const Dialog = styled(MuiDialog)``
 export const DialogTitle = styled(MuiDialogTitle)``
 export const DialogContent = styled(MuiDialogContent)``
 export const DialogActions = styled(MuiDialogActions)``
+
+// alert
+export { Alert }
 
 // form
 export const FormRow = styled.div`

@@ -1,8 +1,8 @@
 import { Cached, Settings } from '@mui/icons-material'
-import PropTypes from 'prop-types'
 import { useContext } from 'react'
 
 import { DataTableContext } from './DataTableProvider'
+import ExportAction from './ExportAction'
 import Loader from './Loader'
 import {
   Box,
@@ -30,6 +30,7 @@ const Toolbar = () => {
     noSettings,
     handleOpenSettings,
     handleClearSelection,
+    noExport,
   } = useContext(DataTableContext)
   return (
     <ToolbarContainer>
@@ -67,6 +68,7 @@ const Toolbar = () => {
             </IconButton>
           </Tooltip>
         )}
+        {!noExport && <ExportAction />}
         {!noSettings && (
           <Tooltip title={t('common:dataTable.Settings')}>
             <IconButton size="small" onClick={handleOpenSettings}>
