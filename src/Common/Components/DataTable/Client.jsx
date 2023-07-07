@@ -1,6 +1,6 @@
 import { Checkbox } from '@mui/material'
 import PropTypes from 'prop-types'
-import { isNil, isNotNil, not, propEq } from 'ramda'
+import { isEmpty, isNil, isNotNil, not, or, propEq } from 'ramda'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import DataTableProvider from './DataTableProvider'
@@ -86,8 +86,10 @@ const DataTableClient = (props) => {
       setStorageData(data)
       const pageSize = getSettingPageSize(data)
       const sort = getSettingSort(data)
+      const columns = getSettingColumns(data)
       not(isNil(pageSize)) && setPageSize(pageSize)
       isNotNil(sort) && isNil(sessionStorageData?.sort) && setSort(sort)
+      not(or(isNil(columns), isEmpty(columns))) && setColumnsSettings(columns)
       setIsIniting(false)
     }
     getData()
@@ -101,21 +103,26 @@ const DataTableClient = (props) => {
   const handleResetSettings = useCallback(() => {
     resetPageSize()
     resetSort()
+    setColumnsSettings(createColumnsPropsWithStorage(columns, listDisplay, []))
     toStorage(id, { ...storageData, settings: {} })
+    handleCloseSettings()
   }, [
     toStorage,
     storageData,
     id,
     resetPageSize,
     resetSort,
+    columns,
+    listDisplay,
+    handleCloseSettings,
   ])
   const handleSaveSettings = useCallback(() => {
-    toStorage(id, { ...storageData, settings: { pageSize, sort } })
+    toStorage(id, { ...storageData, settings: { pageSize, sort, columns: columnsSettings } })
     handleCloseSettings()
-  }, [toStorage, storageData, handleCloseSettings, id, pageSize, sort])
+  }, [toStorage, storageData, handleCloseSettings, id, pageSize, sort, columnsSettings])
 
   // prepare columns
-  const displayColumns = columnsSettings.map(({ id }) => columns.find(propEq(id, 'id')))
+  const displayColumns = columnsSettings.filter(propEq(true, 'visible')).map(({ id }) => columns.find(propEq(id, 'id')))
 
   // prepare data
   const displayData = paginate([...data].sort(sortingComparison))

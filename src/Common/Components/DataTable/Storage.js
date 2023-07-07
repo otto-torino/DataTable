@@ -16,6 +16,7 @@ export const fromStorage = (key, defaultValue = null) => {
 
 export const toStorage = (key, value, onQuotaError) => {
   try {
+    console.log('TO STORE', value) // eslint-disable-line
     return localStorage.setItem(`${app}_${key}`, JSON.stringify(value))
   } catch (err) {
     if (/quota/.test(err.message) || /size/.test(err.message)) {

@@ -38,12 +38,12 @@ export const createColumnsPropsWithStorage = (
   columns
     .map((column) => ({
       id: column.id,
-      visible: storedColumns
+      visible: storedColumns && storedColumns.length
         ? storedColumns?.find(propEq(column.id, 'id'))?.visible
         : listDisplay.indexOf(column.id) !== -1,
     }))
     .sort((a, b) => {
-      if (storedColumns) {
+      if (storedColumns && storedColumns.length) {
         return storedColumns.findIndex(propEq(a.id, 'id')) >
           storedColumns.findIndex(propEq(b.id, 'id'))
           ? 1
