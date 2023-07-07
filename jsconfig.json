@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es6",
+    "baseUrl": "./src",
+    "paths": {
+      "@Common/*": ["./Common/*"],
+      "@Fixtures/*": ["./Fixtures/*"],
+      "@Theme": ["./Theme/index.js"],
+      "@Theme/*": ["./Theme/*"],
+      "@Vehicles/*": ["./Vehicles/*"]
+    }
+  },
+  "exclude": ["dist"],
+  "checkJs": true
+}

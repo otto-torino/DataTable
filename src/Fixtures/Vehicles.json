@@ -1,0 +1,50 @@
+[
+  {
+    "id": 1,
+    "name": "Vehicle 1",
+    "maxSpeed": 100,
+    "status": "available"
+  },
+  {
+    "id": 2,
+    "name": "Vehicle 2",
+    "maxSpeed": 101,
+    "status": "available"
+  },
+  {
+    "id": 3,
+    "name": "Vehicle 3",
+    "maxSpeed": 103,
+    "status": "available"
+  },
+  {
+    "id": 4,
+    "name": "Vehicle 4",
+    "maxSpeed": 104,
+    "status": "available"
+  },
+  {
+    "id": 5,
+    "name": "Vehicle 5",
+    "maxSpeed": 105,
+    "status": "available"
+  },
+  {
+    "id": 6,
+    "name": "Vehicle 6",
+    "maxSpeed": 106,
+    "status": "available"
+  },
+  {
+    "id": 7,
+    "name": "Vehicle 7",
+    "maxSpeed": 107,
+    "status": "available"
+  },
+  {
+    "id": 8,
+    "name": "Vehicle 8",
+    "maxSpeed": 108,
+    "status": "available"
+  }
+]

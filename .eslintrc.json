@@ -1,0 +1,50 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "jest": true
+  },
+  "extends": ["eslint:recommended", "plugin:react/recommended", "prettier"],
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 12,
+    "sourceType": "module"
+  },
+  "plugins": [
+    "react",
+    "react-hooks",
+    "testing-library"
+  ],
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "globals": {
+    "describe": false,
+    "beforeEach": false,
+    "afterEach": false,
+    "it": false,
+    "test": false,
+    "expect": false,
+    "jest": false,
+    "Action": false,
+    "__DEV__": false,
+    "__PROD__": false,
+    "__STAGING__": false,
+    "__DEBUG__": false,
+    "__DEBUG_NEW_WINDOW__": false,
+    "__BASENAME__": false
+  },
+  "rules": {
+    "no-unused-vars": "error",
+    "no-console": "error",
+    "react/react-in-jsx-scope": "off",
+    "array-bracket-newline": "off",
+    "object-curly-newline": "off",
+    "array-element-newline": "off",
+    "object-property-newline": "off"
+  }
+}
