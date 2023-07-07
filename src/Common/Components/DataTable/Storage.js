@@ -52,3 +52,4 @@ export const toSessionStorage = (key, value, onQuotaError) => {
 export const getSettings = defaultTo({}, path(['settings']))
 export const getSettingPageSize = defaultTo(null, path(['settings', 'pageSize']))
 export const getSettingSort = defaultTo(null, path(['settings', 'sort']))
+export const getSettingColumns = defaultTo([], path(['settings', 'columns']))

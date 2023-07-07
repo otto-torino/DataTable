@@ -137,5 +137,12 @@ export const SelectAllLink = styled.button`
 `
 export const ToolbarActions = styled(Box)``
 
+// settings
+export const DraggableRow = styled(Box)`
+  border: 1px solid ${({ theme }) => theme.palette.dataTableContrastLight.main};
+  border-top-width: ${({ first }) => first ? 1 : 0}px;
+  padding-right: .5rem;
+`
+
 // tooltip
 export { Tooltip }

@@ -8,6 +8,33 @@ export default {
     field: 'id',
     direction: 'asc',
   },
+  fields_: {
+    id: {
+      label: 'ID',
+      type: 'int',
+    },
+    name: {
+      label: 'Name',
+      type: 'string',
+      disableSorting: true,
+    },
+    maxSpeed: {
+      label: 'Max Speed',
+      type: 'int',
+    },
+    status: {
+      label: 'Status',
+
+      type: 'string',
+      render: (record) => {
+        return (
+          <div>
+            <span style={{ color: 'blue' }}>{record.status}</span>
+          </div>
+        )
+      }
+    },
+  },
   fields: [
     {
       id: 'id',

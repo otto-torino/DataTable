@@ -1,6 +1,6 @@
 import { Checkbox } from '@mui/material'
 import PropTypes from 'prop-types'
-import { isNil, isNotNil, not } from 'ramda'
+import { isNil, isNotNil, not, propEq } from 'ramda'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import DataTableProvider from './DataTableProvider'
@@ -14,11 +14,12 @@ import {
   toStorage as defaultToStorage,
   fromSessionStorage as defaultFromSessionStorage,
   toSessionStorage as defaultToSessionStorage,
+  getSettingColumns,
 } from './Storage'
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableSortLabel } from './Styled'
 import TablePagination from './TablePagination'
 import Toolbar from './Toolbar'
-import { defaultT, getPrimaryKey, getValue } from './Utils'
+import { createColumnsPropsWithStorage, defaultT, getPrimaryKey, getValue } from './Utils'
 
 const DataTableClient = (props) => {
   const {
@@ -41,6 +42,7 @@ const DataTableClient = (props) => {
     storePageAndSortInSession,
     fromSessionStorage,
     toSessionStorage,
+    listDisplay,
   } = props
 
   // session storage data
@@ -68,6 +70,11 @@ const DataTableClient = (props) => {
   )
 
   // columns
+  const [columnsSettings, setColumnsSettings] = useState([])
+  useEffect(() => {
+    setColumnsSettings(createColumnsPropsWithStorage(columns, listDisplay, getSettingColumns(storageData)))
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, listDisplay])
   const columns = useMemo(() => model.fields, [model.fields])
 
   // storage data (support async initing)
@@ -80,7 +87,6 @@ const DataTableClient = (props) => {
       const pageSize = getSettingPageSize(data)
       const sort = getSettingSort(data)
       not(isNil(pageSize)) && setPageSize(pageSize)
-      console.log('SONO IO') // eslint-disable-line
       isNotNil(sort) && isNil(sessionStorageData?.sort) && setSort(sort)
       setIsIniting(false)
     }
@@ -107,6 +113,9 @@ const DataTableClient = (props) => {
     toStorage(id, { ...storageData, settings: { pageSize, sort } })
     handleCloseSettings()
   }, [toStorage, storageData, handleCloseSettings, id, pageSize, sort])
+
+  // prepare columns
+  const displayColumns = columnsSettings.map(({ id }) => columns.find(propEq(id, 'id')))
 
   // prepare data
   const displayData = paginate([...data].sort(sortingComparison))
@@ -144,6 +153,9 @@ const DataTableClient = (props) => {
         sessionStorageData,
         handleResetSettings,
         handleSaveSettings,
+        columns,
+        setColumnsSettings,
+        columnsSettings,
       }}
     >
       {!noToolbar && <Toolbar />}
@@ -163,7 +175,7 @@ const DataTableClient = (props) => {
                   )}
                 </TableCell>
               )}
-              {columns.map((column) => {
+              {displayColumns.map((column) => {
                 return (
                   <TableCell key={column.id}>
                     {!noSorting && !column.disableSorting ? (
@@ -194,7 +206,7 @@ const DataTableClient = (props) => {
                       <Checkbox size={size} checked={isRecordSelected(pk)} onChange={handleSelectRecord(record)} />
                     </TableCell>
                   )}
-                  {columns.map((column) => {
+                  {displayColumns.map((column) => {
                     return <TableCell key={column.id}>{getValue(record, column, renderContext)}</TableCell>
                   })}
                 </TableRow>
@@ -285,6 +297,8 @@ DataTableClient.propTypes = {
   fromSessionStorage: PropTypes.func,
   // save to session storage
   toSessionStorage: PropTypes.func,
+  // columns which should be visible
+  listDisplay: PropTypes.arrayOf(PropTypes.string).isRequired,
 }
 
 export default DataTableClient

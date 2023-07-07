@@ -24,6 +24,7 @@ function App() {
           onSelect={setSelected}
           onRefetch={() => {}}
           storePageAndSortInSession
+          listDisplay={['id', 'name', 'maxSpeed']}
         />
         )}
       </div>
