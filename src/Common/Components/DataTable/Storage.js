@@ -16,7 +16,6 @@ export const fromStorage = (key, defaultValue = null) => {
 
 export const toStorage = (key, value, onQuotaError) => {
   try {
-    console.log('TO STORE', value) // eslint-disable-line
     return localStorage.setItem(`${app}_${key}`, JSON.stringify(value))
   } catch (err) {
     if (/quota/.test(err.message) || /size/.test(err.message)) {
@@ -54,3 +53,4 @@ export const getSettings = defaultTo({}, path(['settings']))
 export const getSettingPageSize = defaultTo(null, path(['settings', 'pageSize']))
 export const getSettingSort = defaultTo(null, path(['settings', 'sort']))
 export const getSettingColumns = defaultTo([], path(['settings', 'columns']))
+export const getResizing = defaultTo(null, path(['resizing']))

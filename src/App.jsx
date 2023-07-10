@@ -57,7 +57,7 @@ function App() {
           actions={actions}
           onAction={handleAction}
           fullTextSearchFields={['name', 'status']}
-          onExpandRow={() => <div style={{ height: '100px', background: 'red' }}>Hello</div>}
+          onExpandRow_={() => <div style={{ height: '100px', background: 'red' }}>Hello</div>}
           onExpandRowCondition={({ id }) => id % 2 === 0}
         />
         )}

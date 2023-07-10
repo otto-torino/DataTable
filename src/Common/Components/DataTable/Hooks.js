@@ -1,7 +1,8 @@
 import { always, compose, defaultTo, differenceWith, equals, ifElse, isNil, not, propEq, uniqBy } from 'ramda'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
+import { getResizing } from './Storage'
 
-import { getFieldById, getPrimaryKey, getRawValue } from './Utils'
+import { createResizableColumn, getFieldById, getPrimaryKey, getRawValue } from './Utils'
 
 export const usePagination = (id, defaultPage, defaultPageSize, useSessionStorage, sessionStorageData, toSessionStorage) => {
   const [page, baseSetPage] = useState(useSessionStorage ? defaultTo(defaultPage, sessionStorageData?.page) : defaultPage)
@@ -91,4 +92,83 @@ export const useSelection = (selected, onSelect, model) => {
   const handleClearSelection = () => onSelect([])
 
   return { handleSelectRecord, handleSelectPage, handleSelectAll, handleClearSelection, isRecordSelected, isPageSelected }
+}
+
+
+export const useResizableColumns = (
+  id,
+  data,
+  displayColumns,
+  isLoading,
+  fromStorage,
+  toStorage,
+  { disabled },
+) => {
+  useEffect(() => {
+    const run = async () => {
+      if (!isLoading && !disabled) {
+        const table = document.getElementById(`datatable-${id}`)
+        const storageData = await fromStorage(id, {})
+        const resizingSettings = getResizing(storageData)
+
+        setTimeout(() => {
+          if (table) {
+            // Query all headers
+            try {
+              const cols = table.querySelectorAll(':scope > thead > tr > th')
+              const handleSave = async (idx, w) => {
+                const data = defaultTo({}, storageData.resizing)
+                data[idx] = w
+                toStorage(id, { ...storageData, resizing: data })
+              }
+
+              ;[].forEach.call(cols, function (col, index) {
+                if (!col.classList.contains('resizable-fix')) {
+                  const dataId = col.getAttribute('data-id')
+                  // set initial column width
+                  let w
+                  if (!resizingSettings || !resizingSettings[index]) {
+                    // calculate on the fly the first time
+                    const styles = window.getComputedStyle(col)
+                    w = parseFloat(styles.width)
+                    handleSave(index, w)
+                  } else {
+                    // use cached values
+                    w = resizingSettings[index]
+                  }
+                  col.style.width = `${w}px`
+                  col.style.minWidth = `${w}px`
+                  col.style.maxWidth = `${w}px`
+
+                  // Update the with of all column tds
+                  const rows = table.querySelectorAll(':scope > tbody > tr')
+                  ;[].forEach.call(rows, function (row) {
+                    const cells = row.querySelectorAll(':scope > td')
+                    if (cells.length && cells.length > 1) { // expand rows
+                      cells[index].style.width = `${w}px`
+                      cells[index].style.minWidth = `${w}px`
+                      cells[index].style.maxWidth = `${w}px`
+                    }
+                  })
+
+                  // Create a resizer element
+                  const resizer = document.createElement('div')
+                  resizer.classList.add('resizer')
+
+                  // Add a resizer element to the column
+                  col.querySelector('.resizer')?.remove()
+                  col.appendChild(resizer)
+                  createResizableColumn(col, resizer, table, index, handleSave)
+                }
+              })
+            } catch (e) {
+              console.warn('Datatable table useResizing hook error', id, e)
+            }
+          }
+        }, 0)
+      }
+    }
+    run()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data, displayColumns, isLoading])
 }

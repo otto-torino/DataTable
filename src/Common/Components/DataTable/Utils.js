@@ -96,3 +96,56 @@ export const defaultT = stringId => stringId.replace('common:dataTable.', '').sp
 // actions utils
 export const getRecordActions = filter(either(compose(isNil, prop('type')), propEq(RECORD_ACTION_TYPE, 'type')))
 export const getBulkActions = filter(either(compose(isNil, prop('type')), propEq(BULK_ACTION_TYPE, 'type')))
+
+// resize
+export const createResizableColumn = function (col, resizer, table, idx, handleSave) {
+  // Track the current position of mouse
+  let x = 0
+  let w = 0
+
+  const mouseDownHandler = function (e) {
+    // Get the current mouse position
+    x = e.pageX
+
+    // Calculate the current width of column
+    const styles = window.getComputedStyle(col)
+    w = parseInt(styles.width, 10)
+
+    // Attach listeners for document's events
+    document.addEventListener('mousemove', mouseMoveHandler)
+    document.addEventListener('mouseup', mouseUpHandler)
+  }
+
+  const mouseMoveHandler = function (e) {
+    // Determine how far the mouse has been moved
+    const dx = e.pageX - x
+
+    // Update the width of th cell
+    if (w + dx > 30) {
+      col.style.width = `${w + dx}px`
+      col.style.minWidth = `${w + dx}px`
+      col.style.maxWidth = `${w + dx}px`
+
+      // Update the with of all column tds
+      const rows = table.querySelectorAll(':scope > tbody > tr')
+      ;[].forEach.call(rows, function (row) {
+        const cells = row.querySelectorAll(':scope > td')
+        if (cells.length && cells.length > 1) { // expand rows
+          cells[idx].style.width = `${w + dx}px`
+          cells[idx].style.minWidth = `${w + dx}px`
+          cells[idx].style.maxWidth = `${w + dx}px`
+        }
+      })
+
+      handleSave(idx, w + dx)
+    }
+  }
+
+  // When user releases the mouse, remove the existing event listeners
+  const mouseUpHandler = function () {
+    document.removeEventListener('mousemove', mouseMoveHandler)
+    document.removeEventListener('mouseup', mouseUpHandler)
+  }
+
+  resizer.addEventListener('mousedown', mouseDownHandler)
+}

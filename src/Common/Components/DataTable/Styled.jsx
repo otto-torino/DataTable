@@ -60,12 +60,68 @@ export const TableContainer = styled(MuiTableContainer)`
   max-width: 100%;
   overflow: auto;
 `
-export const Table = styled(MuiTable)``
+export const Table = styled(MuiTable)`
+  th {
+    position: relative;
+  }
+
+  &.resizable-active > thead th,
+  &.resizable-active > tbody td {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &.resizable-active > thead th span {
+    position: static;
+  }
+
+  &.resizable-active > thead th.th-col-name span {
+    display: block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &.resizable-active > thead th.th-col-name svg {
+    position: absolute;
+    right: 0;
+    top: 17px;
+    background: inherit !important;
+    margin-left: 0;
+    padding-right: 4px;
+    margin-right: 0;
+    padding-left: 4px;
+  }
+
+  .resizer {
+      border-right: 2px solid ${({ theme }) => theme.palette.dataTableResizableHandle.main};
+      height: 50%;
+      position: absolute;
+      top: 25%;
+      right: 0;
+      width: 5px;
+      cursor: col-resize;
+      user-select: none;
+  }
+
+  .resizer:hover,
+  .resizing {
+      border-right: 2px solid #A32427;
+  }
+`
 export const TableHead = styled(MuiTableHead)``
 export const TableBody = styled(MuiTableBody)``
-export const TableRow = styled(MuiTableRow)``
+export const TableRow = styled(MuiTableRow)`
+  &:hover {
+    td {
+      background: ${({ theme }) => theme.palette.dataTableRowHover.main} !important;
+    }
+  }
+`
 export const TableCell = styled(MuiTableCell)`
-  width: ${({ checkbox, actions }) => (checkbox ? '16px' : actions ? '16px' : 'auto')};
+  width: ${({ checkbox }) => (checkbox ? '20px' : 'auto')};
+  max-width: ${({ checkbox }) => (checkbox ? '20px' : 'auto')};
 `
 export const TableSortLabel = styled(MuiTableSortLabel)``
 export { TablePagination }

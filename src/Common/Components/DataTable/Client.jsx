@@ -2,14 +2,14 @@ import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material'
 import { Checkbox, Collapse } from '@mui/material'
 import PropTypes from 'prop-types'
 import { assoc, compose, isEmpty, isNil, isNotNil, not, or, pick, propEq, T } from 'ramda'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
 import ActionsButton from './ActionsButton'
 import BulkActionsFullTextSearchBar from './BulkActionsFullTextSearchBar'
 import { BULK_ACTION_TYPE, RECORD_ACTION_TYPE } from './Constants'
 import DataTableProvider from './DataTableProvider'
 import { PAGE_SIZE, SORT_DIRECTION, SORT_FIELD } from './Defaults'
-import { usePagination, useSelection, useSorting } from './Hooks'
+import { usePagination, useResizableColumns, useSelection, useSorting } from './Hooks'
 import SettingsDialog from './SettingsDialog'
 import {
   fromStorage as defaultFromStorage,
@@ -51,6 +51,7 @@ const DataTableClient = (props) => {
     onSelect,
     noBulkSelection,
     model,
+    isLoading,
     data,
     defaultPageSize,
     defaultSortField,
@@ -68,6 +69,7 @@ const DataTableClient = (props) => {
     fullTextSearchFields,
     onExpandRow,
     onExpandRowCondition,
+    noColumnsResizing,
   } = props
 
   // session storage data
@@ -155,10 +157,7 @@ const DataTableClient = (props) => {
   )
   const sortedData = filteredData.sort(sortingComparison)
   const displayData = paginate(sortedData)
-  const colSpan =
-    displayColumns.length +
-    (selectable ? 1 : 1) +
-    ((actions && actions.length) || (onExpandRow) ? 1 : 0)
+  const colSpan = displayColumns.length + (selectable ? 1 : 1) + ((actions && actions.length) || onExpandRow ? 1 : 0)
 
   // selection
   const {
@@ -172,6 +171,11 @@ const DataTableClient = (props) => {
 
   // actions
   const recordActions = getRecordActions(actions)
+
+  // resizable columns
+  useResizableColumns(id, data, displayColumns, isLoading, fromStorage, toStorage, {
+    disabled: noColumnsResizing,
+  })
 
   return isIniting ? null : (
     <DataTableProvider
@@ -207,25 +211,24 @@ const DataTableClient = (props) => {
     >
       <BulkActionsFullTextSearchBar />
       <Toolbar />
-      <TableContainer id={`datatable-${id}`}>
-        <Table size={size}>
+      <TableContainer id={`datatable-container-${id}`}>
+        <Table size={size} id={`datatable-${id}`} className={noColumnsResizing ? '' : 'resizable-active'}>
           <TableHead>
             <TableRow>
               {selectable && (
-                <TableCell checkbox>
+                <TableCell padding="checkbox" checkbox className="resizable-fix">
                   {!noBulkSelection && (
                     <Checkbox
                       indeterminate={selected.length > 0 && selected.length < displayData.count}
                       checked={isPageSelected(displayData)}
                       onChange={handleSelectPage(displayData)}
-                      size={size}
                     />
                   )}
                 </TableCell>
               )}
               {displayColumns.map((column) => {
                 return (
-                  <TableCell key={column.id}>
+                  <TableCell key={column.id} data-id={column.id} className={`th-col-name`}>
                     {!noSorting && !column.disableSorting ? (
                       <TableSortLabel
                         active={sort.fieldId === column.id}
@@ -240,7 +243,7 @@ const DataTableClient = (props) => {
                   </TableCell>
                 )
               })}
-              {recordActions.length > 0 && <TableCell actions />}
+              {recordActions.length > 0 && <TableCell className="resizable-fix" />}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -252,11 +255,11 @@ const DataTableClient = (props) => {
               )
 
               return (
-                <>
+                <React.Fragment key={pk}>
                   <TableRow key={pk}>
                     {enableSelection && (
-                      <TableCell>
-                        <Checkbox size={size} checked={isRecordSelected(pk)} onChange={handleSelectRecord(record)} />
+                      <TableCell padding="checkbox" checkbox>
+                        <Checkbox checked={isRecordSelected(pk)} onChange={handleSelectRecord(record)} />
                       </TableCell>
                     )}
                     {displayColumns.map((column) => {
@@ -289,7 +292,7 @@ const DataTableClient = (props) => {
                       </TableCell>
                     </TableRow>
                   )}
-                </>
+                </React.Fragment>
               )
             })}
           </TableBody>
@@ -408,6 +411,8 @@ DataTableClient.propTypes = {
   onExpandRow: PropTypes.func,
   // should display expand button for the record
   onExpandRowCondition: PropTypes.func,
+  // disabl columns resizing
+  noColumnsResizing: PropTypes.bool,
 }
 
 export default DataTableClient

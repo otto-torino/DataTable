@@ -18,12 +18,12 @@ export default {
       id: 'name',
       label: 'Name',
       type: 'string',
-      disableSorting: true,
     },
     {
       id: 'maxSpeed',
       label: 'Max Speed',
       type: 'int',
+      disableSorting: true,
     },
     {
       id: 'status',

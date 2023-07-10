@@ -18,4 +18,10 @@ export const dataTablePalette = (mode) => ({
   dataTableContrastLight: {
     main: mode === 'light' ? '#e7e7e7' : '#111',
   },
+  dataTableResizableHandle: {
+    main: mode === 'light' ? '#e7e7e7' : '#111',
+  },
+  dataTableRowHover: {
+    main: mode === 'light' ? '#e7e7e7' : '#111',
+  }
 })
