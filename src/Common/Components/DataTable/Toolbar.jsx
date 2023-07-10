@@ -13,6 +13,7 @@ import {
   SelectAllLink,
   Tooltip,
   IconButton,
+  Typography,
 } from './Styled'
 
 const Toolbar = () => {
@@ -46,8 +47,8 @@ const Toolbar = () => {
     <ToolbarContainer>
       {selectable && (
         <Box direction="row" align="center" gap="0">
-          <ToolbarSelection>
-            {selected.length} {t('common:dataTable.selected')}
+          <ToolbarSelection direction='row' align='center' gap='.3rem'>
+            {selected.length} <Typography>{t('common:dataTable.selected')}</Typography>
           </ToolbarSelection>
           {selectable &&
             !noBulkSelection &&

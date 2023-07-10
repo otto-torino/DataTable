@@ -51,6 +51,9 @@ export const Box = styled.div`
   width: ${(props) => props.width || 'auto'};
 `
 
+// generics
+export { Typography }
+
 // table
 export const TableContainer = styled(MuiTableContainer)`
   max-width: 100%;
@@ -136,7 +139,7 @@ export const ToolbarContainer = styled.div`
   align-items: center;
   justify-content: space-between;
 `
-export const ToolbarSelection = styled.span``
+export const ToolbarSelection = styled(Box)``
 export const SelectAll = styled(Typography)`
   border-left: 1px solid #eee;
   margin-left: 1rem !important;
