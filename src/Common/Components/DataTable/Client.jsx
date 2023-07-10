@@ -1,6 +1,7 @@
-import { Checkbox } from '@mui/material'
+import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material'
+import { Checkbox, Collapse } from '@mui/material'
 import PropTypes from 'prop-types'
-import { assoc, compose, defaultTo, isEmpty, isNil, isNotNil, not, or, pick, propEq } from 'ramda'
+import { assoc, compose, isEmpty, isNil, isNotNil, not, or, pick, propEq, T } from 'ramda'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import ActionsButton from './ActionsButton'
@@ -19,10 +20,27 @@ import {
   toSessionStorage as defaultToSessionStorage,
   getSettingColumns,
 } from './Storage'
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableSortLabel } from './Styled'
+import {
+  Box,
+  IconButton,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TableSortLabel,
+} from './Styled'
 import TablePagination from './TablePagination'
 import Toolbar from './Toolbar'
-import { applyFullTextSearchFilter, createColumnsPropsWithStorage, defaultT, getPrimaryKey, getRecordActions, getValue } from './Utils'
+import {
+  applyFullTextSearchFilter,
+  createColumnsPropsWithStorage,
+  defaultT,
+  getPrimaryKey,
+  getRecordActions,
+  getValue,
+} from './Utils'
 
 const DataTableClient = (props) => {
   const {
@@ -48,6 +66,8 @@ const DataTableClient = (props) => {
     actions,
     onAction,
     fullTextSearchFields,
+    onExpandRow,
+    onExpandRowCondition,
   } = props
 
   // session storage data
@@ -76,6 +96,9 @@ const DataTableClient = (props) => {
 
   // full text search
   const [fullTextSearch, setFullTextSearch] = useState('')
+
+  // row expanding
+  const [expandedRow, setExpandedRow] = useState(null)
 
   // columns
   const [columnsSettings, setColumnsSettings] = useState([])
@@ -124,9 +147,18 @@ const DataTableClient = (props) => {
   const displayColumns = columnsSettings.filter(propEq(true, 'visible')).map(({ id }) => columns.find(propEq(id, 'id')))
 
   // prepare data
-  const filteredData = data.filter(applyFullTextSearchFilter(fullTextSearchFields.map(f => model.fields.find(propEq(f, 'id'))), fullTextSearch))
+  const filteredData = data.filter(
+    applyFullTextSearchFilter(
+      fullTextSearchFields.map((f) => model.fields.find(propEq(f, 'id'))),
+      fullTextSearch,
+    ),
+  )
   const sortedData = filteredData.sort(sortingComparison)
   const displayData = paginate(sortedData)
+  const colSpan =
+    displayColumns.length +
+    (selectable ? 1 : 1) +
+    ((actions && actions.length) || (onExpandRow) ? 1 : 0)
 
   // selection
   const {
@@ -220,26 +252,44 @@ const DataTableClient = (props) => {
               )
 
               return (
-                <TableRow key={pk}>
-                  {enableSelection && (
-                    <TableCell>
-                      <Checkbox size={size} checked={isRecordSelected(pk)} onChange={handleSelectRecord(record)} />
-                    </TableCell>
+                <>
+                  <TableRow key={pk}>
+                    {enableSelection && (
+                      <TableCell>
+                        <Checkbox size={size} checked={isRecordSelected(pk)} onChange={handleSelectRecord(record)} />
+                      </TableCell>
+                    )}
+                    {displayColumns.map((column) => {
+                      return <TableCell key={column.id}>{getValue(record, column, renderContext)}</TableCell>
+                    })}
+                    {(recordActions.length > 0 || onExpandRow) && (
+                      <TableCell>
+                        <Box direction="row" gap=".5rem" justify="flex-end">
+                          {onExpandRow && onExpandRowCondition(record) && (
+                            <IconButton size={size} onClick={() => setExpandedRow(expandedRow === pk ? null : pk)}>
+                              {expandedRow === pk ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
+                            </IconButton>
+                          )}
+                          {allowedActions.length > 0 && (
+                            <ActionsButton
+                              actions={allowedActions}
+                              onAction={compose(onAction, assoc('record', record), pick(['id']))}
+                            />
+                          )}
+                        </Box>
+                      </TableCell>
+                    )}
+                  </TableRow>
+                  {onExpandRow && (
+                    <TableRow key={`expanded-${pk}`}>
+                      <TableCell style={{ paddingBottom: 0, paddingTop: 0, border: '0px solid' }} colSpan={colSpan}>
+                        <Collapse in={expandedRow === pk} timeout="auto" unmountOnExit>
+                          {onExpandRow(record)}
+                        </Collapse>
+                      </TableCell>
+                    </TableRow>
                   )}
-                  {displayColumns.map((column) => {
-                    return <TableCell key={column.id}>{getValue(record, column, renderContext)}</TableCell>
-                  })}
-                  {recordActions.length > 0 && (
-                    <TableCell>
-                      {allowedActions.length > 0 && (
-                        <ActionsButton
-                          actions={allowedActions}
-                          onAction={compose(onAction, assoc('record', record), pick(['id']))}
-                        />
-                      )}
-                    </TableCell>
-                  )}
-                </TableRow>
+                </>
               )
             })}
           </TableBody>
@@ -261,6 +311,7 @@ DataTableClient.defaultProps = {
   toSessionStorage: defaultToSessionStorage,
   actions: [],
   fullTextSearchFields: [],
+  onExpandRowCondition: T,
 }
 
 DataTableClient.propTypes = {
@@ -353,6 +404,10 @@ DataTableClient.propTypes = {
   onAction: PropTypes.func,
   // fields for which to enable full text search
   fullTextSearchFields: PropTypes.arrayOf(PropTypes.string),
+  // display content as row accordion
+  onExpandRow: PropTypes.func,
+  // should display expand button for the record
+  onExpandRowCondition: PropTypes.func,
 }
 
 export default DataTableClient

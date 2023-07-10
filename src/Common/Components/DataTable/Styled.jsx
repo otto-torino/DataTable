@@ -28,6 +28,7 @@ import {
   ListItemIcon,
   ListItemText,
   InputAdornment,
+  Collapse,
 } from '@mui/material'
 import styled from 'styled-components'
 
@@ -52,7 +53,7 @@ export const Box = styled.div`
 `
 
 // generics
-export { Typography }
+export { Typography, Collapse }
 
 // table
 export const TableContainer = styled(MuiTableContainer)`
