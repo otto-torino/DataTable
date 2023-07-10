@@ -98,7 +98,7 @@ export const getRecordActions = filter(either(compose(isNil, prop('type')), prop
 export const getBulkActions = filter(either(compose(isNil, prop('type')), propEq(BULK_ACTION_TYPE, 'type')))
 
 // resize
-export const createResizableColumn = function (col, resizer, table, idx, handleSave) {
+export const createResizableColumn = function (col, resizer, table, dataId, idx, handleSave) {
   // Track the current position of mouse
   let x = 0
   let w = 0
@@ -137,7 +137,7 @@ export const createResizableColumn = function (col, resizer, table, idx, handleS
         }
       })
 
-      handleSave(idx, w + dx)
+      handleSave(dataId, w + dx)
     }
   }
 

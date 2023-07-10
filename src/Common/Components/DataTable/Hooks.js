@@ -111,30 +111,33 @@ export const useResizableColumns = (
         const storageData = await fromStorage(id, {})
         const resizingSettings = getResizing(storageData)
 
-        setTimeout(() => {
+        setTimeout(async () => {
           if (table) {
             // Query all headers
             try {
               const cols = table.querySelectorAll(':scope > thead > tr > th')
-              const handleSave = async (idx, w) => {
+              const handleSave = async (dataId, w) => {
+                const storageData = await fromStorage(id, {})
                 const data = defaultTo({}, storageData.resizing)
-                data[idx] = w
-                toStorage(id, { ...storageData, resizing: data })
+                data[dataId] = w
+                await toStorage(id, { ...storageData, resizing: data })
               }
 
-              ;[].forEach.call(cols, function (col, index) {
+              let index = 0
+              for (const col of cols) {
                 if (!col.classList.contains('resizable-fix')) {
                   const dataId = col.getAttribute('data-id')
                   // set initial column width
                   let w
-                  if (!resizingSettings || !resizingSettings[index]) {
+                  if (!resizingSettings || !resizingSettings[dataId]) {
                     // calculate on the fly the first time
                     const styles = window.getComputedStyle(col)
                     w = parseFloat(styles.width)
-                    handleSave(index, w)
+                    console.log('CALLING SAVE') // eslint-disable-line
+                    await handleSave(dataId, w)
                   } else {
                     // use cached values
-                    w = resizingSettings[index]
+                    w = resizingSettings[dataId]
                   }
                   col.style.width = `${w}px`
                   col.style.minWidth = `${w}px`
@@ -158,9 +161,10 @@ export const useResizableColumns = (
                   // Add a resizer element to the column
                   col.querySelector('.resizer')?.remove()
                   col.appendChild(resizer)
-                  createResizableColumn(col, resizer, table, index, handleSave)
+                  createResizableColumn(col, resizer, table, dataId, index, handleSave)
                 }
-              })
+                index++
+              }
             } catch (e) {
               console.warn('Datatable table useResizing hook error', id, e)
             }
