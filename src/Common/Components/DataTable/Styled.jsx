@@ -24,6 +24,9 @@ import {
   Typography,
   Tooltip,
   Alert,
+  Menu,
+  ListItemIcon,
+  ListItemText,
 } from '@mui/material'
 import styled from 'styled-components'
 
@@ -57,7 +60,7 @@ export const TableHead = styled(MuiTableHead)``
 export const TableBody = styled(MuiTableBody)``
 export const TableRow = styled(MuiTableRow)``
 export const TableCell = styled(MuiTableCell)`
-  width: ${({ checkbox }) => (checkbox ? '16px' : 'auto')};
+  width: ${({ checkbox, actions }) => (checkbox ? '16px' : actions ? '16px' : 'auto')};
 `
 export const TableSortLabel = styled(MuiTableSortLabel)``
 export { TablePagination }
@@ -93,6 +96,9 @@ export const DialogTitle = styled(MuiDialogTitle)``
 export const DialogContent = styled(MuiDialogContent)``
 export const DialogActions = styled(MuiDialogActions)``
 
+// lists
+export { ListItemIcon, ListItemText }
+
 // alert
 export { Alert }
 
@@ -109,6 +115,7 @@ export const TextField = styled(MuiTextField)``
 export const Checkbox = styled(MuiCheckbox)``
 export const Select = styled(MuiSelect)``
 export const MenuItem = styled(MuiMenuItem)``
+export { Menu }
 
 // loader
 export const LoaderWrapper = styled.div`

@@ -1,8 +1,9 @@
 import { Checkbox } from '@mui/material'
 import PropTypes from 'prop-types'
-import { isEmpty, isNil, isNotNil, not, or, propEq } from 'ramda'
+import { assoc, compose, defaultTo, isEmpty, isNil, isNotNil, not, or, pick, pipe, propEq, tap } from 'ramda'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
+import ActionsButton from './ActionsButton'
 import DataTableProvider from './DataTableProvider'
 import { PAGE_SIZE, SORT_DIRECTION, SORT_FIELD } from './Defaults'
 import { usePagination, useSelection, useSorting } from './Hooks'
@@ -43,6 +44,8 @@ const DataTableClient = (props) => {
     fromSessionStorage,
     toSessionStorage,
     listDisplay,
+    actions,
+    onAction,
   } = props
 
   // session storage data
@@ -73,7 +76,7 @@ const DataTableClient = (props) => {
   const [columnsSettings, setColumnsSettings] = useState([])
   useEffect(() => {
     setColumnsSettings(createColumnsPropsWithStorage(columns, listDisplay, getSettingColumns(storageData)))
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, listDisplay])
   const columns = useMemo(() => model.fields, [model.fields])
 
@@ -93,7 +96,7 @@ const DataTableClient = (props) => {
       setIsIniting(false)
     }
     getData()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id])
 
   // settings dialog
@@ -106,16 +109,7 @@ const DataTableClient = (props) => {
     setColumnsSettings(createColumnsPropsWithStorage(columns, listDisplay, []))
     toStorage(id, { ...storageData, settings: {} })
     handleCloseSettings()
-  }, [
-    toStorage,
-    storageData,
-    id,
-    resetPageSize,
-    resetSort,
-    columns,
-    listDisplay,
-    handleCloseSettings,
-  ])
+  }, [toStorage, storageData, id, resetPageSize, resetSort, columns, listDisplay, handleCloseSettings])
   const handleSaveSettings = useCallback(() => {
     toStorage(id, { ...storageData, settings: { pageSize, sort, columns: columnsSettings } })
     handleCloseSettings()
@@ -202,12 +196,19 @@ const DataTableClient = (props) => {
                   </TableCell>
                 )
               })}
+              {actions && actions.length > 0 && <TableCell actions />}
             </TableRow>
           </TableHead>
           <TableBody>
             {displayData.map((record) => {
               const enableSelection = selectable === true || (typeof selectable === 'function' && selectable(record))
               const pk = getPrimaryKey(model, record)
+              const allowedActions = defaultTo(
+                [],
+                actions?.filter(
+                  (a) => (!a.permission || a.permission(record)) && (!a.condition || a.condition(record)),
+                ),
+              )
 
               return (
                 <TableRow key={pk}>
@@ -219,6 +220,16 @@ const DataTableClient = (props) => {
                   {displayColumns.map((column) => {
                     return <TableCell key={column.id}>{getValue(record, column, renderContext)}</TableCell>
                   })}
+                  {actions && actions.length > 0 && (
+                    <TableCell>
+                      {allowedActions.length > 0 && (
+                        <ActionsButton
+                          actions={allowedActions}
+                          onAction={compose(onAction, assoc('record', record), pick(['id']))}
+                        />
+                      )}
+                    </TableCell>
+                  )}
                 </TableRow>
               )
             })}
@@ -316,6 +327,16 @@ DataTableClient.propTypes = {
   onFilter: PropTypes.func,
   // true if data are filtered
   isFilterFormActive: PropTypes.bool,
+  // single record actions
+  actions: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      label: PropTypes.string.isRequired,
+      icon: PropTypes.node,
+      permission: PropTypes.func,
+      condition: PropTypes.func,
+    }),
+  ),
 }
 
 export default DataTableClient
