@@ -328,12 +328,16 @@ const DataTableClient = (props) => {
 
 DataTableClient.defaultProps = {
   size: 'small',
+  selectable: false,
+  noBulkSelection: false,
+  noAllSelection: false,
   renderContext: {},
   t: defaultT,
   fromStorage: defaultFromStorage,
   toStorage: defaultToStorage,
   fromSessionStorage: defaultFromSessionStorage,
   toSessionStorage: defaultToSessionStorage,
+  storePageAndSortInSession: true,
   actions: [],
   fullTextSearchFields: [],
   onExpandRowCondition: T,
