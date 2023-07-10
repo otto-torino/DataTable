@@ -95,19 +95,19 @@ export const Table = styled(MuiTable)`
   }
 
   .resizer {
-      border-right: 2px solid ${({ theme }) => theme.palette.dataTableResizableHandle.main};
-      height: 50%;
-      position: absolute;
-      top: 25%;
-      right: 0;
-      width: 5px;
-      cursor: col-resize;
-      user-select: none;
+    border-right: 2px solid ${({ theme }) => theme.palette.dataTableResizableHandle.main};
+    height: 50%;
+    position: absolute;
+    top: 25%;
+    right: 0;
+    width: 5px;
+    cursor: col-resize;
+    user-select: none;
   }
 
   .resizer:hover,
   .resizing {
-      border-right: 2px solid #A32427;
+    border-right: 2px solid #a32427;
   }
 `
 export const TableHead = styled(MuiTableHead)``
@@ -122,12 +122,18 @@ export const TableRow = styled(MuiTableRow)`
 export const TableCell = styled(MuiTableCell)`
   width: ${({ checkbox }) => (checkbox ? '20px' : 'auto')};
   max-width: ${({ checkbox }) => (checkbox ? '20px' : 'auto')};
+  ${({ stickyLeft, stickyRight, theme }) =>
+    (stickyLeft || stickyRight) &&
+    `position: sticky !important; z-index: 2; background: ${theme.palette.dataTableSticky.main} !important;`}
+  ${({ stickyLeft }) => stickyLeft && 'left: 0;'}
+  ${({ stickyRight }) => stickyRight && 'right: 0;'}
 `
 export const TableSortLabel = styled(MuiTableSortLabel)``
 export { TablePagination }
 export const PageInput = styled.input`
   border: 1px solid ${({ theme }) => theme.palette.dataTableContrastLight.main};
-  background: ${({ theme, warning }) => (warning ? theme.palette.dataTableWarning.main : theme.palette.dataTableContrastLight.main)};
+  background: ${({ theme, warning }) =>
+    warning ? theme.palette.dataTableWarning.main : theme.palette.dataTableContrastLight.main};
   color: ${({ theme }) => theme.palette.dataTableContent.contrastText};
   margin: 0 2rem 0 0.5rem;
   padding: 0.5rem;
@@ -136,9 +142,7 @@ export const PageInput = styled.input`
   &:focus {
     border: 1px solid
       ${({ theme, warning }) =>
-        warning
-          ? theme.palette.dataTableError.main
-          : theme.palette.dataTableContrastLight.main};
+        warning ? theme.palette.dataTableError.main : theme.palette.dataTableContrastLight.main};
     outline: 0;
   }
 `
@@ -210,8 +214,8 @@ export const ToolbarActions = styled(Box)``
 // settings
 export const DraggableRow = styled(Box)`
   border: 1px solid ${({ theme }) => theme.palette.dataTableContrastLight.main};
-  border-top-width: ${({ first }) => first ? 1 : 0}px;
-  padding-right: .5rem;
+  border-top-width: ${({ first }) => (first ? 1 : 0)}px;
+  padding-right: 0.5rem;
 `
 
 // tooltip

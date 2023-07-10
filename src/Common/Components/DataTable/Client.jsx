@@ -19,6 +19,7 @@ import {
   fromSessionStorage as defaultFromSessionStorage,
   toSessionStorage as defaultToSessionStorage,
   getSettingColumns,
+  getResizing,
 } from './Storage'
 import {
   Box,
@@ -70,6 +71,7 @@ const DataTableClient = (props) => {
     onExpandRow,
     onExpandRowCondition,
     noColumnsResizing,
+    noSticky,
   } = props
 
   // session storage data
@@ -128,6 +130,7 @@ const DataTableClient = (props) => {
     getData()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id])
+  const resizingColumnsData = getResizing(storageData)
 
   // settings dialog
   const [settingsDialogIsOpen, setSettingsDialogIsOpen] = useState(false)
@@ -227,15 +230,29 @@ const DataTableClient = (props) => {
                 </TableCell>
               )}
               {displayColumns.map((column, idx) => {
+                let widthStyles = {}
+                if (!noColumnsResizing && resizingColumnsData[column.id]) {
+                  const v = resizingColumnsData[column.id]
+                  widthStyles = { ...widthStyles, width: v, minWidth: v, maxWidth: v }
+                }
+
                 return (
-                  <TableCell key={column.id} data-id={column.id} className={`th-col-name${idx === displayColumns.length - 1 && !recordActions.length && !onExpandRow ? ' resizable-fix' : ''}`}>
+                  <TableCell
+                    style={{ ...widthStyles }}
+                    stickyLeft={idx === 0 && !noSticky}
+                    key={column.id}
+                    data-id={column.id}
+                    className={`th-col-name${
+                      idx === displayColumns.length - 1 && !recordActions.length && !onExpandRow ? ' resizable-fix' : ''
+                    }`}
+                  >
                     {!noSorting && !column.disableSorting ? (
                       <TableSortLabel
                         active={sort.fieldId === column.id}
                         direction={sort.fieldId === column.id ? sort.direction : 'asc'}
                         onClick={handleSortChange(column.id)}
                       >
-                        {column.label} AA
+                        {column.label}
                       </TableSortLabel>
                     ) : (
                       column.label
@@ -243,7 +260,9 @@ const DataTableClient = (props) => {
                   </TableCell>
                 )
               })}
-              {(recordActions.length > 0 || onExpandRow) && <TableCell className="resizable-fix" />}
+              {(recordActions.length > 0 || onExpandRow) && (
+                <TableCell stickyRight={!noSticky} className="resizable-fix" />
+              )}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -253,7 +272,6 @@ const DataTableClient = (props) => {
               const allowedActions = recordActions.filter(
                 (a) => (!a.permission || a.permission(record)) && (!a.condition || a.condition(record)),
               )
-
               return (
                 <React.Fragment key={pk}>
                   <TableRow key={pk}>
@@ -262,11 +280,15 @@ const DataTableClient = (props) => {
                         <Checkbox checked={isRecordSelected(pk)} onChange={handleSelectRecord(record)} />
                       </TableCell>
                     )}
-                    {displayColumns.map((column) => {
-                      return <TableCell key={column.id}>{getValue(record, column, renderContext)}</TableCell>
+                    {displayColumns.map((column, idx) => {
+                      return (
+                        <TableCell stickyLeft={idx === 0 && !noSticky} key={column.id}>
+                          {getValue(record, column, renderContext)}
+                        </TableCell>
+                      )
                     })}
                     {(recordActions.length > 0 || onExpandRow) && (
-                      <TableCell>
+                      <TableCell stickyRight={!noSticky}>
                         <Box direction="row" gap=".5rem" justify="flex-end">
                           {onExpandRow && onExpandRowCondition(record) && (
                             <IconButton size={size} onClick={() => setExpandedRow(expandedRow === pk ? null : pk)}>
@@ -413,6 +435,8 @@ DataTableClient.propTypes = {
   onExpandRowCondition: PropTypes.func,
   // disabl columns resizing
   noColumnsResizing: PropTypes.bool,
+  // disable first and last columns sticky position
+  noSticky: PropTypes.bool,
 }
 
 export default DataTableClient
