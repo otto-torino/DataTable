@@ -1,5 +1,5 @@
-import { Cached, Settings } from '@mui/icons-material'
-import { useContext } from 'react'
+import { Cached, FilterAlt, FilterAltOff, Settings } from '@mui/icons-material'
+import { useContext, useState } from 'react'
 
 import { DataTableContext } from './DataTableProvider'
 import ExportAction from './ExportAction'
@@ -31,7 +31,16 @@ const Toolbar = () => {
     handleOpenSettings,
     handleClearSelection,
     noExport,
+    onFilter,
+    isFilterFormActive,
   } = useContext(DataTableContext)
+
+  // filter form
+  const [filterFormIsOpen, setFilterFormIsOpen] = useState(false)
+  const handleOpenFilterForm = () => setFilterFormIsOpen(true)
+  const handleCloseFilterForm = () => setFilterFormIsOpen(false)
+  const FilterIcon = isFilterFormActive ? FilterAlt : FilterAltOff
+
   return (
     <ToolbarContainer>
       {selectable && (
@@ -68,6 +77,13 @@ const Toolbar = () => {
             </IconButton>
           </Tooltip>
         )}
+        {onFilter && (
+          <Tooltip title={t('common:dataTable.Filter')}>
+            <IconButton size="small" onClick={handleOpenFilterForm}>
+              <FilterIcon style={{ cursor: 'pointer' }} color={isFilterFormActive ? 'primary' : undefined} />
+            </IconButton>
+          </Tooltip>
+        )}
         {!noExport && <ExportAction />}
         {!noSettings && (
           <Tooltip title={t('common:dataTable.Settings')}>
@@ -77,6 +93,7 @@ const Toolbar = () => {
           </Tooltip>
         )}
       </ToolbarActions>
+      {filterFormIsOpen && onFilter(handleCloseFilterForm)}
     </ToolbarContainer>
   )
 }

@@ -311,6 +311,11 @@ DataTableClient.propTypes = {
   listDisplay: PropTypes.arrayOf(PropTypes.string).isRequired,
   // disable export
   noExport: PropTypes.bool,
+  // function called when filter button is pressed
+  // filter button is not displayed if null or undefined
+  onFilter: PropTypes.func,
+  // true if data are filtered
+  isFilterFormActive: PropTypes.bool,
 }
 
 export default DataTableClient

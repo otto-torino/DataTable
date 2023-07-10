@@ -25,6 +25,8 @@ function App() {
           onRefetch={() => {}}
           storePageAndSortInSession
           listDisplay={['id', 'name', 'maxSpeed']}
+          onFilter={() => {}}
+          isFilterFormActive={false}
         />
         )}
       </div>
