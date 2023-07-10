@@ -33,16 +33,14 @@ const SettingsDialog = () => {
     sort,
     setSort,
     columns,
-    size,
     setColumnsSettings,
     columnsSettings,
+    size,
   } = useContext(DataTableContext)
   const selected = columnsSettings.filter(prop('visible')).map(prop('id'))
   const handlePageSizeChange = pipe(path(['target', 'value']), (v) => parseInt(v), max(1), setPageSize)
   const handleChangeDefaultSortField = (evt) => setSort({ ...sort, fieldId: evt.target.value })
   const handleChangeDefaultSortDirection = (evt) => setSort({ ...sort, direction: evt.target.value })
-
-  console.log('COLUMNS SETTINGS', columnsSettings) // eslint-disable-line
 
   const handleSelectColumn = (id) => (event) => {
     setColumnsSettings(
@@ -97,14 +95,14 @@ const SettingsDialog = () => {
               value={pageSize}
               onChange={handlePageSizeChange}
               type="number"
-              size="small"
+              size={size}
             />
           </FormControl>
         </FormRow>
         {!noSorting && (
           <FormRow>
             <FormControl fullWidth>
-              <InputLabel required>{t('common:dataTable.DefaultSortField')}</InputLabel>
+              <InputLabel size={size} required>{t('common:dataTable.DefaultSortField')}</InputLabel>
               <Select
                 required
                 size="small"
@@ -120,10 +118,10 @@ const SettingsDialog = () => {
               </Select>
             </FormControl>
             <FormControl fullWidth>
-              <InputLabel required>{t('common:dataTable.DefaultSortDirection')}</InputLabel>
+              <InputLabel size={size} required>{t('common:dataTable.DefaultSortDirection')}</InputLabel>
               <Select
                 required
-                size="small"
+                size={size}
                 value={sort.direction}
                 label={t('common:dataTable.DefaultSortDirection')}
                 onChange={handleChangeDefaultSortDirection}

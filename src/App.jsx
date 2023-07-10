@@ -5,7 +5,8 @@ import DataTable from '@Common/Components/DataTable/Client'
 import Vehicles from '@Fixtures/Vehicles.json'
 import getTheme from '@Theme'
 import Vehicle from '@Vehicles/Models/Vehicle'
-import { Edit } from '@mui/icons-material'
+import { Delete, Edit, MoveUp } from '@mui/icons-material'
+import { BULK_ACTION_TYPE, RECORD_ACTION_TYPE } from '@Common/Components/DataTable/Constants'
 
 function App() {
   const mode = 'light'
@@ -18,6 +19,18 @@ function App() {
       id: 'EDIT',
       label: 'Edit',
       icon: <Edit />,
+      type: RECORD_ACTION_TYPE,
+    },
+    {
+      id: 'DELETE',
+      label: 'Delete',
+      icon: <Delete />,
+    },
+    {
+      id: 'MOVE',
+      label: 'Move',
+      icon: <MoveUp />,
+      type: BULK_ACTION_TYPE,
     }
   ]
 

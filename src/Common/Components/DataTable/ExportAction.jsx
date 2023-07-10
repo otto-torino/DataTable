@@ -47,7 +47,6 @@ const ExportAction = ({ exportApi, qs }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(displayColumns), JSON.stringify(sortedData), isOpen, renderContext])
 
-  console.log('FILE NAME', fileName) // eslint-disable-line
   return (
     <>
       <Tooltip title={t('common:dataTable.Export')}>

@@ -17,7 +17,7 @@ import {
   IconButton as MuiIconButton,
   TextField as MuiTextField,
   Checkbox as MuiCheckbox,
-  Select as MuiSelect,
+  Select,
   MenuItem as MuiMenuItem,
   FormControl as MuiFormControl,
   InputLabel as MuiInputLabel,
@@ -113,9 +113,8 @@ export const FormControl = styled(MuiFormControl)``
 export const InputLabel = styled(MuiInputLabel)``
 export const TextField = styled(MuiTextField)``
 export const Checkbox = styled(MuiCheckbox)``
-export const Select = styled(MuiSelect)``
 export const MenuItem = styled(MuiMenuItem)``
-export { Menu }
+export { Menu, Select }
 
 // loader
 export const LoaderWrapper = styled.div`

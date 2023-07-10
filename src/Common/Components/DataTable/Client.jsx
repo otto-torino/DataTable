@@ -1,9 +1,11 @@
 import { Checkbox } from '@mui/material'
 import PropTypes from 'prop-types'
-import { assoc, compose, defaultTo, isEmpty, isNil, isNotNil, not, or, pick, pipe, propEq, tap } from 'ramda'
+import { assoc, compose, defaultTo, isEmpty, isNil, isNotNil, not, or, pick, propEq } from 'ramda'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import ActionsButton from './ActionsButton'
+import BulkActionsFullTextSearchBar from './BulkActionsFullTextSearchBar'
+import { BULK_ACTION_TYPE, RECORD_ACTION_TYPE } from './Constants'
 import DataTableProvider from './DataTableProvider'
 import { PAGE_SIZE, SORT_DIRECTION, SORT_FIELD } from './Defaults'
 import { usePagination, useSelection, useSorting } from './Hooks'
@@ -20,7 +22,7 @@ import {
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableSortLabel } from './Styled'
 import TablePagination from './TablePagination'
 import Toolbar from './Toolbar'
-import { createColumnsPropsWithStorage, defaultT, getPrimaryKey, getValue } from './Utils'
+import { createColumnsPropsWithStorage, defaultT, getBulkActions, getPrimaryKey, getRecordActions, getValue } from './Utils'
 
 const DataTableClient = (props) => {
   const {
@@ -46,6 +48,7 @@ const DataTableClient = (props) => {
     listDisplay,
     actions,
     onAction,
+    fullTextSearchFields,
   } = props
 
   // session storage data
@@ -132,6 +135,9 @@ const DataTableClient = (props) => {
     isPageSelected,
   } = useSelection(selected, onSelect, model)
 
+  // actions
+  const recordActions = getRecordActions(actions)
+
   return isIniting ? null : (
     <DataTableProvider
       context={{
@@ -162,7 +168,8 @@ const DataTableClient = (props) => {
         columnsSettings,
       }}
     >
-      {!noToolbar && <Toolbar />}
+      <BulkActionsFullTextSearchBar />
+      <Toolbar />
       <TableContainer id={`datatable-${id}`}>
         <Table size={size}>
           <TableHead>
@@ -196,18 +203,15 @@ const DataTableClient = (props) => {
                   </TableCell>
                 )
               })}
-              {actions && actions.length > 0 && <TableCell actions />}
+              {recordActions.length > 0 && <TableCell actions />}
             </TableRow>
           </TableHead>
           <TableBody>
             {displayData.map((record) => {
               const enableSelection = selectable === true || (typeof selectable === 'function' && selectable(record))
               const pk = getPrimaryKey(model, record)
-              const allowedActions = defaultTo(
-                [],
-                actions?.filter(
-                  (a) => (!a.permission || a.permission(record)) && (!a.condition || a.condition(record)),
-                ),
+              const allowedActions = recordActions.filter(
+                (a) => (!a.permission || a.permission(record)) && (!a.condition || a.condition(record)),
               )
 
               return (
@@ -220,7 +224,7 @@ const DataTableClient = (props) => {
                   {displayColumns.map((column) => {
                     return <TableCell key={column.id}>{getValue(record, column, renderContext)}</TableCell>
                   })}
-                  {actions && actions.length > 0 && (
+                  {recordActions.length > 0 && (
                     <TableCell>
                       {allowedActions.length > 0 && (
                         <ActionsButton
@@ -250,6 +254,8 @@ DataTableClient.defaultProps = {
   toStorage: defaultToStorage,
   fromSessionStorage: defaultFromSessionStorage,
   toSessionStorage: defaultToSessionStorage,
+  actions: [],
+  fullTextSearchFields: [],
 }
 
 DataTableClient.propTypes = {
@@ -335,8 +341,13 @@ DataTableClient.propTypes = {
       icon: PropTypes.node,
       permission: PropTypes.func,
       condition: PropTypes.func,
+      type: PropTypes.oneOf([RECORD_ACTION_TYPE, BULK_ACTION_TYPE]), // if undefined both types are allowed
     }),
   ),
+  // callback when action is triggered, receives object {id, record}
+  onAction: PropTypes.func,
+  // fields for which to enable full text search
+  fullTextSearchFields: PropTypes.arrayOf(PropTypes.string),
 }
 
 export default DataTableClient

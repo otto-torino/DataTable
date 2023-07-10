@@ -1,4 +1,5 @@
-import { curry, propEq } from "ramda"
+import { compose, curry, either, filter, isNil, prop, propEq } from "ramda"
+import { BULK_ACTION_TYPE, RECORD_ACTION_TYPE } from "./Constants"
 
 // model related utils
 export const getPrimaryKey = curry((model, record) => {
@@ -76,3 +77,6 @@ export const withEventValue = (fn, isCheckbox) => e => fn(isCheckbox ? e.target.
 // i18n related utils
 export const defaultT = stringId => stringId.replace('common:dataTable.', '').split(/(?=[A-Z])/).join(' ')
 
+// actions utils
+export const getRecordActions = filter(either(compose(isNil, prop('type')), propEq(RECORD_ACTION_TYPE, 'type')))
+export const getBulkActions = filter(either(compose(isNil, prop('type')), propEq(BULK_ACTION_TYPE, 'type')))

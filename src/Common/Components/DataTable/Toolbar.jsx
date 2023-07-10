@@ -17,6 +17,7 @@ import {
 
 const Toolbar = () => {
   const {
+    noToolbar,
     t,
     selectable,
     selected,
@@ -41,7 +42,7 @@ const Toolbar = () => {
   const handleCloseFilterForm = () => setFilterFormIsOpen(false)
   const FilterIcon = isFilterFormActive ? FilterAlt : FilterAltOff
 
-  return (
+  return noToolbar ? null : (
     <ToolbarContainer>
       {selectable && (
         <Box direction="row" align="center" gap="0">
