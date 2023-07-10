@@ -226,9 +226,9 @@ const DataTableClient = (props) => {
                   )}
                 </TableCell>
               )}
-              {displayColumns.map((column) => {
+              {displayColumns.map((column, idx) => {
                 return (
-                  <TableCell key={column.id} data-id={column.id} className={`th-col-name`}>
+                  <TableCell key={column.id} data-id={column.id} className={`th-col-name${idx === displayColumns.length - 1 && !recordActions.length && !onExpandRow ? ' resizable-fix' : ''}`}>
                     {!noSorting && !column.disableSorting ? (
                       <TableSortLabel
                         active={sort.fieldId === column.id}
@@ -243,7 +243,7 @@ const DataTableClient = (props) => {
                   </TableCell>
                 )
               })}
-              {recordActions.length > 0 && <TableCell className="resizable-fix" />}
+              {(recordActions.length > 0 || onExpandRow) && <TableCell className="resizable-fix" />}
             </TableRow>
           </TableHead>
           <TableBody>

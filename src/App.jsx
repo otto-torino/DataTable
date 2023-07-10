@@ -54,7 +54,7 @@ function App() {
           listDisplay={['id', 'name', 'maxSpeed']}
           onFilter={() => {}}
           isFilterFormActive={false}
-          actions={actions}
+          actions_={actions}
           onAction={handleAction}
           fullTextSearchFields={['name', 'status']}
           onExpandRow_={() => <div style={{ height: '100px', background: 'red' }}>Hello</div>}
