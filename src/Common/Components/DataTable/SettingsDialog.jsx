@@ -1,5 +1,5 @@
 import { DragHandle } from '@mui/icons-material'
-import { always, compose, equals, ifElse, isNil, max, not, path, pipe, prop } from 'ramda'
+import { always, compose, equals, ifElse, isNil, max, not, path, pipe, prop, propEq } from 'ramda'
 import { useContext } from 'react'
 
 import { DataTableContext } from './DataTableProvider'
@@ -70,7 +70,7 @@ const SettingsDialog = () => {
   }
 
 
-  const sortedColumns = columns.sort((a, b) => {
+  const sortedColumns = columnsSettings.sort((a, b) => {
     if (a.visible && !b.visible) {
       return -1
     } else if (b.visible && !a.visible) {
@@ -78,7 +78,7 @@ const SettingsDialog = () => {
     } else {
       return 0
     }
-  })
+  }).map(({ id }) => columns.find(propEq(id, 'id')))
 
   return (
     <Dialog open onClose={handleCloseSettings} maxWidth="sm" fullWidth>
