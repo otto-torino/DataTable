@@ -56,6 +56,7 @@ function App() {
           isFilterFormActive={false}
           actions={actions}
           onAction={handleAction}
+          fullTextSearchFields={['name', 'status']}
         />
         )}
       </div>

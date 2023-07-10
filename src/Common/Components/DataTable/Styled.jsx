@@ -15,7 +15,7 @@ import {
   DialogActions as MuiDialogActions,
   Button as MuiButton,
   IconButton as MuiIconButton,
-  TextField as MuiTextField,
+  TextField,
   Checkbox as MuiCheckbox,
   Select,
   MenuItem as MuiMenuItem,
@@ -27,6 +27,7 @@ import {
   Menu,
   ListItemIcon,
   ListItemText,
+  InputAdornment,
 } from '@mui/material'
 import styled from 'styled-components'
 
@@ -111,10 +112,9 @@ export const FormRow = styled.div`
 `
 export const FormControl = styled(MuiFormControl)``
 export const InputLabel = styled(MuiInputLabel)``
-export const TextField = styled(MuiTextField)``
 export const Checkbox = styled(MuiCheckbox)``
 export const MenuItem = styled(MuiMenuItem)``
-export { Menu, Select }
+export { Menu, Select, InputAdornment, TextField }
 
 // loader
 export const LoaderWrapper = styled.div`

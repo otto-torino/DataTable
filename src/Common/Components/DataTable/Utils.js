@@ -70,6 +70,17 @@ export const createColumnsPropsWithStorage = (
       }
     })
 
+// data related utils
+export const applyFullTextSearchFilter = (fullTextSearchFields, fullTextSearch) => (record) => {
+  if (!fullTextSearch) {
+    return true
+  }
+  return fullTextSearchFields.some((field) => {
+    const value = getRawValue(record, field)
+    return value && value.toString().toLowerCase().indexOf(fullTextSearch.toLowerCase()) !== -1
+  })
+}
+
 
 // events related utils
 export const withEventValue = (fn, isCheckbox) => e => fn(isCheckbox ? e.target.checked : e.target.value)

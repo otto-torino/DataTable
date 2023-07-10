@@ -22,7 +22,7 @@ import {
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableSortLabel } from './Styled'
 import TablePagination from './TablePagination'
 import Toolbar from './Toolbar'
-import { createColumnsPropsWithStorage, defaultT, getBulkActions, getPrimaryKey, getRecordActions, getValue } from './Utils'
+import { applyFullTextSearchFilter, createColumnsPropsWithStorage, defaultT, getPrimaryKey, getRecordActions, getValue } from './Utils'
 
 const DataTableClient = (props) => {
   const {
@@ -39,7 +39,6 @@ const DataTableClient = (props) => {
     defaultSortDirection,
     noSorting,
     renderContext,
-    noToolbar,
     fromStorage,
     toStorage,
     storePageAndSortInSession,
@@ -74,6 +73,9 @@ const DataTableClient = (props) => {
     sessionStorageData,
     toSessionStorage,
   )
+
+  // full text search
+  const [fullTextSearch, setFullTextSearch] = useState('')
 
   // columns
   const [columnsSettings, setColumnsSettings] = useState([])
@@ -122,7 +124,8 @@ const DataTableClient = (props) => {
   const displayColumns = columnsSettings.filter(propEq(true, 'visible')).map(({ id }) => columns.find(propEq(id, 'id')))
 
   // prepare data
-  const sortedData = [...data].sort(sortingComparison)
+  const filteredData = data.filter(applyFullTextSearchFilter(fullTextSearchFields.map(f => model.fields.find(propEq(f, 'id'))), fullTextSearch))
+  const sortedData = filteredData.sort(sortingComparison)
   const displayData = paginate(sortedData)
 
   // selection
@@ -166,6 +169,8 @@ const DataTableClient = (props) => {
         displayColumns,
         setColumnsSettings,
         columnsSettings,
+        fullTextSearch,
+        setFullTextSearch,
       }}
     >
       <BulkActionsFullTextSearchBar />
