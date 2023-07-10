@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 export const VehicleType = PropTypes.shape({})
 
 export default {
-  primaryKey: 'id', // can be also a list of keys
+  primaryKey: 'id,name', // can be also be a comma separated list of fields
   sort: {
     field: 'id',
     direction: 'asc',

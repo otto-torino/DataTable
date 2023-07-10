@@ -3,7 +3,12 @@ import { BULK_ACTION_TYPE, RECORD_ACTION_TYPE } from "./Constants"
 
 // model related utils
 export const getPrimaryKey = curry((model, record) => {
-  return record[model.primaryKey] // @TODO combined primary key
+  return model.primaryKey
+    .split(',')
+    .map((f) =>
+      f.split('.').reduce((acc, curr) => (acc ? acc[curr] : null), record),
+    )
+    .join('-')
 })
 
 export const getRawValue = (record, field) => {
