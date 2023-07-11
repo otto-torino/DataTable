@@ -1,4 +1,3 @@
-import { Cached, FilterAlt, FilterAltOff, Settings } from '@mui/icons-material'
 import { useContext, useState } from 'react'
 
 import { AdapterContext } from './AdapterProvider'
@@ -17,6 +16,10 @@ const Toolbar = () => {
     Tooltip,
     IconButton,
     Typography,
+    Cached,
+    FilterAlt,
+    FilterAltOff,
+    Settings,
   } = useContext(AdapterContext)
   const {
     noToolbar,

@@ -1,4 +1,3 @@
-import { DragHandle } from '@mui/icons-material'
 import { always, compose, equals, ifElse, isNil, max, not, path, pipe, prop, propEq } from 'ramda'
 import { useContext } from 'react'
 
@@ -21,6 +20,7 @@ const SettingsDialog = () => {
     MenuItem,
     Select,
     TextField,
+    DragHandle,
   } = useContext(AdapterContext)
   const {
     t,

@@ -1,11 +1,10 @@
-import MoreVertIcon from '@mui/icons-material/MoreVert'
 import PropTypes from 'prop-types'
 import { useContext, useState } from 'react'
 
 import { AdapterContext } from './AdapterProvider'
 
 const ActionsButton = ({ actions, onAction }) => {
-  const { IconButton, Menu, MenuItem, ListItemIcon, ListItemText } = useContext(AdapterContext)
+  const { IconButton, Menu, MenuItem, ListItemIcon, ListItemText, MoreVert } = useContext(AdapterContext)
   const [anchorEl, setAnchorEl] = useState(null)
   const open = Boolean(anchorEl)
 
@@ -21,7 +20,7 @@ const ActionsButton = ({ actions, onAction }) => {
   return (
     <>
       <IconButton onClick={handleClick} size="small">
-        <MoreVertIcon />
+        <MoreVert />
       </IconButton>
       <Menu anchorEl={anchorEl} keepMounted open={open} onClose={handleClose}>
         {actions.map((action) => (

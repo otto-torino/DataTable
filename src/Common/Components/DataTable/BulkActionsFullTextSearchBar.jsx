@@ -4,7 +4,6 @@ import { useContext, useState } from 'react'
 
 import { AdapterContext } from './AdapterProvider'
 import { DataTableContext } from './DataTableProvider'
-import './Styled'
 import { getBulkActions, withEventValue } from './Utils'
 
 const BulkActionsFullTextSearchBar = () => {

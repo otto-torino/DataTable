@@ -1,4 +1,3 @@
-import { Save } from '@mui/icons-material'
 import PropTypes from 'prop-types'
 import { defaultTo, isNil, isNotNil } from 'ramda'
 import React, { useCallback, useContext, useEffect, useState } from 'react'
@@ -7,11 +6,11 @@ import { CSVLink } from 'react-csv'
 import { AdapterContext } from './AdapterProvider'
 import { DataTableContext } from './DataTableProvider'
 import Loader from './Loader'
-import { Tooltip } from './Styled'
 import { getCsvValue, withEventValue } from './Utils'
 
 const ExportAction = ({ exportApi, qs }) => {
-  const { Dialog, DialogContent, IconButton, TextField, Alert, DialogActions, Button } = useContext(AdapterContext)
+  const { Dialog, DialogContent, IconButton, TextField, Alert, DialogActions, Button, Tooltip, Save } =
+    useContext(AdapterContext)
   const { t, displayColumns, sortedData, renderContext, id } = useContext(DataTableContext)
   const [fileName, setFileName] = React.useState(`${new Date().toDateString().replace(/ /g, '-')}-${id}.csv`)
   const [isOpen, setIsOpen] = useState(false)

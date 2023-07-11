@@ -1,3 +1,16 @@
+// icons
+import {
+  MoreVert,
+  KeyboardArrowDown,
+  KeyboardArrowUp,
+  Save,
+  DragHandle,
+  Cached,
+  FilterAlt,
+  FilterAltOff,
+  Settings,
+} from '@mui/icons-material'
+
 import {
   Box,
   IconButton,
@@ -38,6 +51,7 @@ import {
   ToolbarContainer,
   SelectAll,
   Typography,
+  Collapse,
 } from './Styled'
 
 export default {
@@ -80,4 +94,14 @@ export default {
   ToolbarContainer,
   SelectAll,
   Typography,
+  Collapse,
+  MoreVert,
+  KeyboardArrowUp,
+  KeyboardArrowDown,
+  Save,
+  DragHandle,
+  Cached,
+  FilterAlt,
+  FilterAltOff,
+  Settings,
 }

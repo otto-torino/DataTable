@@ -1,5 +1,3 @@
-import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material'
-import { Checkbox, Collapse } from '@mui/material'
 import PropTypes from 'prop-types'
 import { assoc, compose, isEmpty, isNil, isNotNil, not, or, pick, propEq, T } from 'ramda'
 import React, { memo, useCallback, useContext, useEffect, useMemo, useState } from 'react'
@@ -65,8 +63,21 @@ const DataTableClient = memo((props) => {
   } = props
 
   // ui components
-  const { Box, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableSortLabel } =
-    useContext(AdapterContext)
+  const {
+    Box,
+    IconButton,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    TableSortLabel,
+    Checkbox,
+    Collapse,
+    KeyboardArrowDown,
+    KeyboardArrowUp,
+  } = useContext(AdapterContext)
 
   // session storage data
   const sessionStorageData = fromSessionStorage(id, {})

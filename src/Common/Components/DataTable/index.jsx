@@ -6,7 +6,7 @@ import DataTableClient from './Client'
 
 const DataTable = ({ type, adapter, ...props }) => {
   let Table = type === 'client' ? DataTableClient : DataTableClient // @TODO rtk datatable
-  let adapterContext = adapter === 'mui' ? MuiAdapter : null
+  let adapterContext = adapter === 'mui' ? MuiAdapter : MuiAdapter // @TODO other adapters
   return adapter ? (
     <AdapterProvider context={adapterContext}>
       <Table {...props} />
@@ -18,6 +18,7 @@ const DataTable = ({ type, adapter, ...props }) => {
 
 DataTable.defaultProps = {
   type: 'client', 
+  adapter: 'mui',
 }
 
 DataTable.propTypes = {
