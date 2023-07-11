@@ -58,13 +58,10 @@ export { Typography, Collapse }
 // table
 export const TableContainer = styled(MuiTableContainer)`
   max-width: 100%;
-  max-width: 100%;
   overflow: auto;
 `
-export const Table = styled.table`
-  width: 100%;
-
-  thead td {
+export const Table = styled(MuiTable)`
+  th {
     position: relative;
   }
 
@@ -113,18 +110,18 @@ export const Table = styled.table`
     border-right: 2px solid #a32427;
   }
 `
-export const TableHead = styled.thead``
-export const TableBody = styled.tbody``
-export const TableRow = styled.tr`
+export const TableHead = styled(MuiTableHead)``
+export const TableBody = styled(MuiTableBody)``
+export const TableRow = styled(MuiTableRow)`
   &:hover {
     td {
       background: ${({ theme }) => theme.palette.dataTableRowHover.main} !important;
     }
   }
 `
-export const TableCell = styled.td`
-  width: ${({ checkbox }) => (checkbox ? '40px' : 'auto')};
-  max-width: ${({ checkbox }) => (checkbox ? '40px' : 'auto')};
+export const TableCell = styled(MuiTableCell)`
+  width: ${({ checkbox }) => (checkbox ? '20px' : 'auto')};
+  max-width: ${({ checkbox }) => (checkbox ? '20px' : 'auto')};
   ${({ stickyLeft, stickyRight, theme }) =>
     (stickyLeft || stickyRight) &&
     `position: sticky !important; z-index: 2; background: ${theme.palette.dataTableSticky.main} !important;`}

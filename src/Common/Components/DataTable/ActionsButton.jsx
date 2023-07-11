@@ -1,10 +1,11 @@
 import MoreVertIcon from '@mui/icons-material/MoreVert'
 import PropTypes from 'prop-types'
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 
-import { IconButton, Menu, MenuItem, ListItemIcon, ListItemText } from './Styled'
+import { AdapterContext } from './AdapterProvider'
 
 const ActionsButton = ({ actions, onAction }) => {
+  const { IconButton, Menu, MenuItem, ListItemIcon, ListItemText } = useContext(AdapterContext)
   const [anchorEl, setAnchorEl] = useState(null)
   const open = Boolean(anchorEl)
 

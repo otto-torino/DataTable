@@ -1,7 +1,7 @@
 import { ThemeProvider } from '@mui/material'
 import { useMemo, useState } from 'react'
 
-import DataTable from '@Common/Components/DataTable/Client'
+import DataTable from '@Common/Components/DataTable'
 import Vehicles from '@Fixtures/Vehicles.json'
 import getTheme from '@Theme'
 import Vehicle from '@Vehicles/Models/Vehicle'
@@ -43,6 +43,8 @@ function App() {
       <div>
         {isVisible && (
         <DataTable
+          type='client'
+          adapter='mui'
           selectable
           id="vehicles"
           data={Vehicles}

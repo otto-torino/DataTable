@@ -4,13 +4,14 @@ import { defaultTo, isNil, isNotNil } from 'ramda'
 import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { CSVLink } from 'react-csv'
 
+import { AdapterContext } from './AdapterProvider'
 import { DataTableContext } from './DataTableProvider'
 import Loader from './Loader'
-import { Dialog, DialogContent, IconButton, TextField, Alert, DialogActions, Button } from './Styled'
 import { Tooltip } from './Styled'
 import { getCsvValue, withEventValue } from './Utils'
 
 const ExportAction = ({ exportApi, qs }) => {
+  const { Dialog, DialogContent, IconButton, TextField, Alert, DialogActions, Button } = useContext(AdapterContext)
   const { t, displayColumns, sortedData, renderContext, id } = useContext(DataTableContext)
   const [fileName, setFileName] = React.useState(`${new Date().toDateString().replace(/ /g, '-')}-${id}.csv`)
   const [isOpen, setIsOpen] = useState(false)
@@ -51,7 +52,7 @@ const ExportAction = ({ exportApi, qs }) => {
     <>
       <Tooltip title={t('common:dataTable.Export')}>
         <IconButton size="small" onClick={handleOpen}>
-          <Save color='primary' />
+          <Save color="primary" />
         </IconButton>
       </Tooltip>
       <Dialog onClose={handleClose} open={isOpen} maxWidth="sm">

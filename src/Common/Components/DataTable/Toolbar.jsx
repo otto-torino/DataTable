@@ -1,22 +1,23 @@
 import { Cached, FilterAlt, FilterAltOff, Settings } from '@mui/icons-material'
 import { useContext, useState } from 'react'
 
+import { AdapterContext } from './AdapterProvider'
 import { DataTableContext } from './DataTableProvider'
 import ExportAction from './ExportAction'
 import Loader from './Loader'
-import {
-  Box,
-  ToolbarActions,
-  ToolbarSelection,
-  ToolbarContainer,
-  SelectAll,
-  Button,
-  Tooltip,
-  IconButton,
-  Typography,
-} from './Styled'
 
 const Toolbar = () => {
+  const {
+    Box,
+    ToolbarActions,
+    ToolbarSelection,
+    ToolbarContainer,
+    SelectAll,
+    Button,
+    Tooltip,
+    IconButton,
+    Typography,
+  } = useContext(AdapterContext)
   const {
     noToolbar,
     t,
@@ -47,7 +48,7 @@ const Toolbar = () => {
     <ToolbarContainer>
       {selectable && (
         <Box direction="row" align="center" gap="0">
-          <ToolbarSelection direction='row' align='center' gap='.3rem'>
+          <ToolbarSelection direction="row" align="center" gap=".3rem">
             {selected.length} <Typography sx={{ fontWeight: 700 }}>{t('common:dataTable.selected')}</Typography>
           </ToolbarSelection>
           {selectable &&
@@ -75,7 +76,7 @@ const Toolbar = () => {
         {!!onRefetch && (
           <Tooltip title={t('common:dataTable.Refresh')}>
             <IconButton size="small" onClick={onRefetch}>
-              <Cached color='primary' />
+              <Cached color="primary" />
             </IconButton>
           </Tooltip>
         )}
@@ -90,7 +91,7 @@ const Toolbar = () => {
         {!noSettings && (
           <Tooltip title={t('common:dataTable.Settings')}>
             <IconButton size="small" onClick={handleOpenSettings}>
-              <Settings color='primary' />
+              <Settings color="primary" />
             </IconButton>
           </Tooltip>
         )}

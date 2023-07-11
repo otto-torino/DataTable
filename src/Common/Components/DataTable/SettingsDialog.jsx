@@ -2,25 +2,26 @@ import { DragHandle } from '@mui/icons-material'
 import { always, compose, equals, ifElse, isNil, max, not, path, pipe, prop, propEq } from 'ramda'
 import { useContext } from 'react'
 
+import { AdapterContext } from './AdapterProvider'
 import { DataTableContext } from './DataTableProvider'
 import { Container, Draggable } from './DragAndDrop'
-import {
-  Button,
-  Checkbox,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  DraggableRow,
-  FormControl,
-  FormRow,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField,
-} from './Styled'
 
 const SettingsDialog = () => {
+  const {
+    Button,
+    Checkbox,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    DraggableRow,
+    FormControl,
+    FormRow,
+    InputLabel,
+    MenuItem,
+    Select,
+    TextField,
+  } = useContext(AdapterContext)
   const {
     t,
     handleCloseSettings,
@@ -45,11 +46,7 @@ const SettingsDialog = () => {
   const handleSelectColumn = (id) => (event) => {
     setColumnsSettings(
       columnsSettings.map((column) =>
-        ifElse(
-          equals(id),
-          always({ ...column, visible: prop('checked')(event.target) }),
-          always(column),
-        )(column.id),
+        ifElse(equals(id), always({ ...column, visible: prop('checked')(event.target) }), always(column))(column.id),
       ),
     )
   }
@@ -60,25 +57,23 @@ const SettingsDialog = () => {
       ifElse(
         isNil,
         always(columns),
-        compose(
-          always(copy),
-          always(copy.splice(addedIndex, 0, copy.splice(removedIndex, 1)[0])),
-        ),
+        compose(always(copy), always(copy.splice(addedIndex, 0, copy.splice(removedIndex, 1)[0]))),
         always(columns),
       )(removedIndex),
     )
   }
 
-
-  const sortedColumns = columnsSettings.sort((a, b) => {
-    if (a.visible && !b.visible) {
-      return -1
-    } else if (b.visible && !a.visible) {
-      return 1
-    } else {
-      return 0
-    }
-  }).map(({ id }) => columns.find(propEq(id, 'id')))
+  const sortedColumns = columnsSettings
+    .sort((a, b) => {
+      if (a.visible && !b.visible) {
+        return -1
+      } else if (b.visible && !a.visible) {
+        return 1
+      } else {
+        return 0
+      }
+    })
+    .map(({ id }) => columns.find(propEq(id, 'id')))
 
   return (
     <Dialog open onClose={handleCloseSettings} maxWidth="sm" fullWidth>
@@ -102,7 +97,9 @@ const SettingsDialog = () => {
         {!noSorting && (
           <FormRow>
             <FormControl fullWidth>
-              <InputLabel size={size} required>{t('common:dataTable.DefaultSortField')}</InputLabel>
+              <InputLabel size={size} required>
+                {t('common:dataTable.DefaultSortField')}
+              </InputLabel>
               <Select
                 required
                 size="small"
@@ -118,7 +115,9 @@ const SettingsDialog = () => {
               </Select>
             </FormControl>
             <FormControl fullWidth>
-              <InputLabel size={size} required>{t('common:dataTable.DefaultSortDirection')}</InputLabel>
+              <InputLabel size={size} required>
+                {t('common:dataTable.DefaultSortDirection')}
+              </InputLabel>
               <Select
                 required
                 size={size}
@@ -136,14 +135,12 @@ const SettingsDialog = () => {
             </FormControl>
           </FormRow>
         )}
-        <p>
-          {t('common:dataTable.ColumnsSettings')}
-        </p>
+        <p>{t('common:dataTable.ColumnsSettings')}</p>
         <Container onDrop={handleDrop}>
           {sortedColumns.map((column, idx) => {
             return (
               <Draggable key={`row-${column.id}`}>
-                <DraggableRow direction='row' align='center' justify='space-between' first={idx === 0}>
+                <DraggableRow direction="row" align="center" justify="space-between" first={idx === 0}>
                   <div>
                     <Checkbox
                       checked={selected.indexOf(column.id) !== -1}

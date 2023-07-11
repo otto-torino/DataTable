@@ -2,9 +2,10 @@ import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material'
 import { Checkbox, Collapse } from '@mui/material'
 import PropTypes from 'prop-types'
 import { assoc, compose, isEmpty, isNil, isNotNil, not, or, pick, propEq, T } from 'ramda'
-import React, { memo, useCallback, useEffect, useMemo, useState } from 'react'
+import React, { memo, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 
 import ActionsButton from './ActionsButton'
+import { AdapterContext } from './AdapterProvider'
 import BulkActionsFullTextSearchBar from './BulkActionsFullTextSearchBar'
 import { BULK_ACTION_TYPE, RECORD_ACTION_TYPE } from './Constants'
 import DataTableProvider from './DataTableProvider'
@@ -21,17 +22,6 @@ import {
   getSettingColumns,
   getResizing,
 } from './Storage'
-import {
-  Box,
-  IconButton,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  TableSortLabel,
-} from './Styled'
 import TablePagination from './TablePagination'
 import Toolbar from './Toolbar'
 import {
@@ -73,6 +63,10 @@ const DataTableClient = memo((props) => {
     noColumnsResizing,
     noSticky,
   } = props
+
+  // ui components
+  const { Box, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableSortLabel } =
+    useContext(AdapterContext)
 
   // session storage data
   const sessionStorageData = fromSessionStorage(id, {})

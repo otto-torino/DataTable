@@ -115,7 +115,7 @@ export const useResizableColumns = (
           if (table) {
             // Query all headers
             try {
-              const cols = table.querySelectorAll(':scope > thead > tr > th')
+              const cols = table.querySelectorAll(':scope > thead > tr > *')
               const handleSave = async (dataId, w) => {
                 const storageData = await fromStorage(id, {})
                 const data = defaultTo({}, storageData.resizing)
@@ -133,7 +133,6 @@ export const useResizableColumns = (
                     // calculate on the fly the first time
                     const styles = window.getComputedStyle(col)
                     w = parseFloat(styles.width)
-                    console.log('CALLING SAVE') // eslint-disable-line
                     await handleSave(dataId, w)
                   } else {
                     // use cached values
