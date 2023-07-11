@@ -44,7 +44,6 @@ function App() {
         {isVisible && (
         <DataTable
           type='client'
-          adapter='mui'
           selectable
           id="vehicles"
           data={Vehicles}

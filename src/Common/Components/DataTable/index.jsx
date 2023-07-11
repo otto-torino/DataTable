@@ -18,7 +18,6 @@ const DataTable = ({ type, adapter, ...props }) => {
 
 DataTable.defaultProps = {
   type: 'client', 
-  adapter: 'mui',
 }
 
 DataTable.propTypes = {
