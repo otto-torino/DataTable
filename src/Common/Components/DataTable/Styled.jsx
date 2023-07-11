@@ -13,8 +13,8 @@ import {
   DialogTitle as MuiDialogTitle,
   DialogContent as MuiDialogContent,
   DialogActions as MuiDialogActions,
-  Button as MuiButton,
-  IconButton as MuiIconButton,
+  Button,
+  IconButton,
   TextField,
   Checkbox as MuiCheckbox,
   Select,
@@ -152,8 +152,7 @@ export const PageLabel = styled.label`
 `
 
 // button
-export const Button = styled(MuiButton)``
-export const IconButton = styled(MuiIconButton)``
+export { Button, IconButton }
 
 // dialog
 export const Dialog = styled(MuiDialog)``
@@ -200,14 +199,14 @@ export const ToolbarContainer = styled.div`
   align-items: center;
   justify-content: space-between;
 `
-export const ToolbarSelection = styled(Box)``
+export const ToolbarSelection = styled(Box)`
+  font-weight: 700;
+  margin-left: .4rem;
+`
 export const SelectAll = styled(Typography)`
-  border-left: 1px solid #eee;
+  border-left: 1px solid ${({ theme }) => theme.palette.dataTableToolbarSeparator.main};
   margin-left: 1rem !important;
   padding-left: 1rem;
-`
-export const SelectAllLink = styled.button`
-  cursor: pointer;
 `
 export const ToolbarActions = styled(Box)``
 

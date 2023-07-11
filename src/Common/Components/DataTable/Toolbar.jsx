@@ -10,7 +10,7 @@ import {
   ToolbarSelection,
   ToolbarContainer,
   SelectAll,
-  SelectAllLink,
+  Button,
   Tooltip,
   IconButton,
   Typography,
@@ -48,7 +48,7 @@ const Toolbar = () => {
       {selectable && (
         <Box direction="row" align="center" gap="0">
           <ToolbarSelection direction='row' align='center' gap='.3rem'>
-            {selected.length} <Typography>{t('common:dataTable.selected')}</Typography>
+            {selected.length} <Typography sx={{ fontWeight: 700 }}>{t('common:dataTable.selected')}</Typography>
           </ToolbarSelection>
           {selectable &&
             !noBulkSelection &&
@@ -56,16 +56,16 @@ const Toolbar = () => {
             selected.length === displayData.length &&
             selected.length !== data.length && (
               <SelectAll component="div">
-                <SelectAllLink onClick={handleSelectAll(data)} size="small">
+                <Button onClick={handleSelectAll(data)} size="small">
                   {t('common:dataTable.SelectAll')}
-                </SelectAllLink>
+                </Button>
               </SelectAll>
             )}
           {selectable && !!selected.length && (
             <SelectAll component="div">
-              <SelectAllLink onClick={handleClearSelection} size="small">
+              <Button onClick={handleClearSelection} size="small">
                 {t('common:dataTable.ClearSelection')}
-              </SelectAllLink>
+              </Button>
             </SelectAll>
           )}
         </Box>
@@ -75,14 +75,14 @@ const Toolbar = () => {
         {!!onRefetch && (
           <Tooltip title={t('common:dataTable.Refresh')}>
             <IconButton size="small" onClick={onRefetch}>
-              <Cached />
+              <Cached color='primary' />
             </IconButton>
           </Tooltip>
         )}
         {onFilter && (
           <Tooltip title={t('common:dataTable.Filter')}>
             <IconButton size="small" onClick={handleOpenFilterForm}>
-              <FilterIcon style={{ cursor: 'pointer' }} color={isFilterFormActive ? 'primary' : undefined} />
+              <FilterIcon style={{ cursor: 'pointer' }} color={isFilterFormActive ? 'secondary' : 'primary'} />
             </IconButton>
           </Tooltip>
         )}
@@ -90,7 +90,7 @@ const Toolbar = () => {
         {!noSettings && (
           <Tooltip title={t('common:dataTable.Settings')}>
             <IconButton size="small" onClick={handleOpenSettings}>
-              <Settings />
+              <Settings color='primary' />
             </IconButton>
           </Tooltip>
         )}

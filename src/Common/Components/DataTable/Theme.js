@@ -7,6 +7,9 @@ export const dataTablePalette = (mode) => ({
     main: mode === 'light' ? '#e7e7e7' : '#111',
     contrastText: mode === 'light' ? '#000' : '#fff',
   },
+  dataTableToolbarSeparator: {
+    main: mode === 'light' ? '#fff' : '#666',
+  },
   dataTableWarning: {
     main: mode === 'light' ? '#ff9900' : '#ff9900',
     contrastText: mode === 'light' ? '#fff' : '#fff',
@@ -22,7 +25,7 @@ export const dataTablePalette = (mode) => ({
     main: mode === 'light' ? '#e7e7e7' : '#111',
   },
   dataTableRowHover: {
-    main: mode === 'light' ? '#e7e7e7' : '#111',
+    main: mode === 'light' ? '#f7f7f7' : '#111',
   },
   dataTableSticky: {
     main: mode === 'light' ? '#fff' : '#000',
