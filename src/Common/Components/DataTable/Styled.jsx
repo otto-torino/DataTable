@@ -135,7 +135,7 @@ export const PageInput = styled.input`
   background: ${({ theme, warning }) =>
     warning ? theme.palette.dataTableWarning.main : theme.palette.dataTableContrastLight.main};
   color: ${({ theme }) => theme.palette.dataTableContent.contrastText};
-  margin: 0 2rem 0 0.5rem;
+  margin: 0 .5rem 0 0.5rem;
   padding: 0.5rem;
   max-width: 40px;
 
@@ -146,7 +146,7 @@ export const PageInput = styled.input`
     outline: 0;
   }
 `
-export const PageLabel = styled.label`
+export const PageLabel = styled(Typography)`
   font-size: 0.9rem;
   line-height: 1.43;
 `
