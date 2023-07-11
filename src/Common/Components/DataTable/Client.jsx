@@ -2,7 +2,7 @@ import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material'
 import { Checkbox, Collapse } from '@mui/material'
 import PropTypes from 'prop-types'
 import { assoc, compose, isEmpty, isNil, isNotNil, not, or, pick, propEq, T } from 'ramda'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { memo, useCallback, useEffect, useMemo, useState } from 'react'
 
 import ActionsButton from './ActionsButton'
 import BulkActionsFullTextSearchBar from './BulkActionsFullTextSearchBar'
@@ -43,7 +43,7 @@ import {
   getValue,
 } from './Utils'
 
-const DataTableClient = (props) => {
+const DataTableClient = memo((props) => {
   const {
     id,
     size,
@@ -324,7 +324,8 @@ const DataTableClient = (props) => {
       {settingsDialogIsOpen && <SettingsDialog />}
     </DataTableProvider>
   )
-}
+})
+DataTableClient.displayName = 'DataTableClient'
 
 DataTableClient.defaultProps = {
   size: 'small',
