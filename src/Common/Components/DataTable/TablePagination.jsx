@@ -1,13 +1,13 @@
 import PropTypes from 'prop-types'
 import React, { useContext, useState } from 'react'
 
-import { AdapterContext } from './AdapterProvider'
+import { DataTableInternalContext } from './DataTableInternalProvider'
 import { DataTableContext } from './DataTableProvider'
 import { withEventValue } from './Utils'
 
 const TablePagination = () => {
-  const { TablePagination: BaseTablePagination, Box, PageLabel, PageInput } = useContext(AdapterContext)
-  const { page, data, pageSize, setPage, noPageInputField, count } = useContext(DataTableContext)
+  const { TablePagination: BaseTablePagination, Box, PageLabel, PageInput } = useContext(DataTableContext)
+  const { page, data, pageSize, setPage, noPageInputField, count } = useContext(DataTableInternalContext)
 
   const muiProps = {
     rowsPerPageOptions: [pageSize],

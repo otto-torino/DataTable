@@ -1,10 +1,27 @@
-import { useContext } from "react"
-import { AdapterContext } from "./AdapterProvider"
-import { DataTableContext } from "./DataTableProvider"
+import { useContext } from 'react'
+
+import { DataTableInternalContext } from './DataTableInternalProvider'
+import { DataTableContext } from './DataTableProvider'
 
 const DataTableHead = () => {
-  const { TableHead, TableRow, TableCell, TableSortLabel, Checkbox } = useContext(AdapterContext)
-  const { selectable, selected, displayData, displayColumns, sort, recordActions, onExpandRow, noSorting, noBulkSelection, noColumnsResizing, resizingColumnsData, noSticky, isPageSelected, handleSelectPage, handleSortChange } = useContext(DataTableContext)
+  const { TableHead, TableRow, TableCell, TableSortLabel, Checkbox } = useContext(DataTableContext)
+  const {
+    selectable,
+    selected,
+    displayData,
+    displayColumns,
+    sort,
+    recordActions,
+    onExpandRow,
+    noSorting,
+    noBulkSelection,
+    noColumnsResizing,
+    resizingColumnsData,
+    noSticky,
+    isPageSelected,
+    handleSelectPage,
+    handleSortChange,
+  } = useContext(DataTableInternalContext)
   return (
     <TableHead>
       <TableRow>
@@ -48,7 +65,12 @@ const DataTableHead = () => {
             </TableCell>
           )
         })}
-        {(recordActions.length > 0 || onExpandRow || !noColumnsResizing) && <TableCell className="resizable-fix" />}
+        {(recordActions.length > 0 || onExpandRow) && (
+          <TableCell className="resizable-fix" stickyRight={!noSticky} />
+        )}
+        {(recordActions.length === 0 && !onExpandRow && !noColumnsResizing) && (
+          <TableCell className="resizable-fix" />
+        )}
       </TableRow>
     </TableHead>
   )

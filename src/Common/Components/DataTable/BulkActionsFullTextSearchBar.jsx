@@ -1,13 +1,13 @@
-import { Help } from '@mui/icons-material'
 import { toLower } from 'ramda'
 import { useContext, useState } from 'react'
 
-import { AdapterContext } from './AdapterProvider'
+import { DataTableInternalContext } from './DataTableInternalProvider'
 import { DataTableContext } from './DataTableProvider'
 import { getBulkActions, withEventValue } from './Utils'
 
 const BulkActionsFullTextSearchBar = () => {
   const {
+    t,
     Box,
     Button,
     FormControl,
@@ -19,9 +19,10 @@ const BulkActionsFullTextSearchBar = () => {
     Select,
     TextField,
     Tooltip,
-  } = useContext(AdapterContext)
-  const { t, size, actions, onAction, fullTextSearchFields, selected, fullTextSearch, setFullTextSearch } =
-    useContext(DataTableContext)
+    Help,
+  } = useContext(DataTableContext)
+  const { size, actions, onAction, fullTextSearchFields, selected, fullTextSearch, setFullTextSearch } =
+    useContext(DataTableInternalContext)
   const [selectedAction, setSelectedAction] = useState('')
 
   const bulkActions = getBulkActions(actions)

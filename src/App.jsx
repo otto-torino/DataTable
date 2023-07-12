@@ -1,5 +1,6 @@
 import { Delete, Edit, MoveUp } from '@mui/icons-material'
 import { ThemeProvider } from '@mui/material'
+import { defaultTo } from 'ramda'
 import { useCallback, useMemo, useState } from 'react'
 
 import DataTable from '@Common/Components/DataTable'
@@ -9,8 +10,8 @@ import { useCampaignsQuery } from '@Core/Services/Api/Campaigns'
 import Vehicles from '@Fixtures/Vehicles.json'
 import getTheme from '@Theme'
 import Vehicle from '@Vehicles/Models/Vehicle'
+
 import Campaign from './Campaigns/Model/Campaign'
-import { defaultTo } from 'ramda'
 import { apiQueryString } from './Core/Services/Api'
 
 const LIST_DISPLAY = ['id', 'name', 'maxSpeed']
@@ -58,9 +59,7 @@ function App() {
     console.log('FILTER')
   }, [])
   const onExpandRow = useCallback(() => {
-    return (
-      <div style={{ height: '100px', background: 'red' }}>Hello</div>
-    )
+    return <div style={{ height: '100px', background: 'red' }}>Hello</div>
   }, [])
   const onExpandRowCondition = useCallback(({ id }) => id % 2 === 0, [])
 

@@ -2,12 +2,12 @@ import { assoc, compose, pick } from "ramda"
 import React from "react"
 import { useContext } from "react"
 import ActionsButton from "./ActionsButton"
-import { AdapterContext } from "./AdapterProvider"
+import { DataTableInternalContext } from "./DataTableInternalProvider"
 import { DataTableContext } from "./DataTableProvider"
 import { getPrimaryKey, getValue } from "./Utils"
 
 const DataTableBody = () => {
-  const { TableBody, TableRow, TableCell, Checkbox, Box, IconButton, KeyboardArrowUp, KeyboardArrowDown, Collapse } = useContext(AdapterContext)
+  const { TableBody, TableRow, TableCell, Checkbox, Box, IconButton, KeyboardArrowUp, KeyboardArrowDown, Collapse } = useContext(DataTableContext)
   const {
     selectable,
     isRecordSelected,
@@ -26,7 +26,7 @@ const DataTableBody = () => {
     size,
     onAction,
     colSpan,
-  } = useContext(DataTableContext)
+  } = useContext(DataTableInternalContext)
   return (
     <TableBody>
       {displayData.map((record) => {

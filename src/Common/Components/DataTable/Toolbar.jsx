@@ -1,12 +1,13 @@
 import { useContext, useState } from 'react'
 
-import { AdapterContext } from './AdapterProvider'
+import { DataTableInternalContext } from './DataTableInternalProvider'
 import { DataTableContext } from './DataTableProvider'
 import ExportAction from './ExportAction'
 import Loader from './Loader'
 
 const Toolbar = () => {
   const {
+    t,
     Box,
     ToolbarActions,
     ToolbarSelection,
@@ -20,10 +21,9 @@ const Toolbar = () => {
     FilterAlt,
     FilterAltOff,
     Settings,
-  } = useContext(AdapterContext)
+  } = useContext(DataTableContext)
   const {
     noToolbar,
-    t,
     selectable,
     selected,
     noBulkSelection,
@@ -39,7 +39,7 @@ const Toolbar = () => {
     noExport,
     onFilter,
     isFilterFormActive,
-  } = useContext(DataTableContext)
+  } = useContext(DataTableInternalContext)
 
   // filter form
   const [filterFormIsOpen, setFilterFormIsOpen] = useState(false)

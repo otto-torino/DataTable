@@ -1,10 +1,9 @@
 import PropTypes from 'prop-types'
 import { useContext, useState } from 'react'
-
-import { AdapterContext } from './AdapterProvider'
+import { DataTableContext } from './DataTableProvider'
 
 const ActionsButton = ({ actions, onAction }) => {
-  const { IconButton, Menu, MenuItem, ListItemIcon, ListItemText, MoreVert } = useContext(AdapterContext)
+  const { IconButton, Menu, MenuItem, ListItemIcon, ListItemText, MoreVert } = useContext(DataTableContext)
   const [anchorEl, setAnchorEl] = useState(null)
   const open = Boolean(anchorEl)
 

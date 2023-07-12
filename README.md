@@ -6,17 +6,23 @@ Currently 2 kinds of datatable are implemented:
 - Client: manages a whole set of data (pagination, sorting and filtering can be addressed by the table itself clientside)
 - Rtk: manage a set of data retrieved through RTK query (server-side pagination sorting and filtering)
 
-It's designed to work with MUI, but you can write yoor own adapter to support other design frameworks
+It's designed to work with MUI, but you can write your own adapter to support other design frameworks
 
 ## Dependencies
 
-- styled-components
-- smooth-dnd
-- redux (if using RTK DataTable)
-- react-redux (if using RTK DataTable)
-- @reduxjs/toolkit (if using RTK DataTable)
 - ramda
+- smooth-dnd
 - react-csv
+
+If using the RTK variant:
+
+- redux
+- react-redux
+- @reduxjs/toolkit
+
+If using the MUI adapter:
+
+- styled-components
 - @fontsource/roboto
 - @mui/icons-material
 - @mui/material
@@ -25,39 +31,48 @@ It's designed to work with MUI, but you can write yoor own adapter to support ot
 ## Example
 
   ``` jsx
-  // the DataTable component is memoized, so pay attention to complex props!
-  const vehicles = [{ id: 1, name: 'FIAT 500'}, ...]
-  const LIST_DISPLAY = useMemo(() => ['id', 'name'], [])
-  const onFilter = useCallback(
-    (handleClose) => <Modal onClose={handleClose}>FILTERS</Modal>,
-    [Modal]
-  )
-  const onRefetch = useCallback(() => { /* refetch data */ }, [])
-  const onExpandRow = useCallback((record) => <div>Some record related stuff</div>, [])
-  const actions = useMemo(() => [{ id: 'EDIT', label: 'Edit', icon: <Edit /> }, ...], [])
-  const handleAction = useCallback((actionId, record, records) => { /* do something */ }, [])
-  const SEARCH_FIELDS = useMemo(() => ['id', 'name'], [])
+  import MuiAdapterContext from 'DataTable/Adapters/Mui/MuiAdapterContext.js'
+  import { useTranslation } from 'react-18next'
 
-  return (
-    <DataTable
-      variant="client"
-      selectable
-      id="vehicles"
-      data={vehicles}
-      model={Vehicle}
-      selected={selected}
-      onSelect={setSelected}
-      onRefetch={onRefetch}
-      storePageAndSortInSession
-      listDisplay={LIST_DISPLAY}
-      onFilter={onFilter}
-      isFilterFormActive={false}
-      actions={actions}
-      onAction={handleAction}
-      fullTextSearchFields={SEARCH_FIELDS}
-      onExpandRow={onExpandRow}
-    />
-  )
+  const MyComponent = () => {
+    // translation function
+    const { t } = useTranslation()
+    // the DataTable component is memoized, so pay attention to complex props!
+    const vehicles = [{ id: 1, name: 'FIAT 500'}, ...]
+    const LIST_DISPLAY = useMemo(() => ['id', 'name'], [])
+    const onFilter = useCallback(
+      (handleClose) => <Modal onClose={handleClose}>FILTERS</Modal>,
+      [Modal]
+    )
+    const onRefetch = useCallback(() => { /* refetch data */ }, [])
+    const onExpandRow = useCallback((record) => <div>Some record related stuff</div>, [])
+    const actions = useMemo(() => [{ id: 'EDIT', label: 'Edit', icon: <Edit /> }, ...], [])
+    const handleAction = useCallback((actionId, record, records) => { /* do something */ }, [])
+    const SEARCH_FIELDS = useMemo(() => ['id', 'name'], [])
+
+    return (
+      <DataTableProvider context={{ ...MuiAdapterContext, t }}>
+        <DataTable
+          variant="client"
+          selectable
+          id="vehicles"
+          data={vehicles}
+          model={Vehicle}
+          selected={selected}
+          onSelect={setSelected}
+          onRefetch={onRefetch}
+          storePageAndSortInSession
+          listDisplay={LIST_DISPLAY}
+          onFilter={onFilter}
+          isFilterFormActive={false}
+          actions={actions}
+          onAction={handleAction}
+          fullTextSearchFields={SEARCH_FIELDS}
+          onExpandRow={onExpandRow}
+        />
+      </DataTableProvider>
+    )
+  }
   ```
 
 ## Common props
@@ -85,7 +100,6 @@ It's designed to work with MUI, but you can write yoor own adapter to support ot
 |renderContext|object|false|{}|A context passed to the model render function, used to customize field value|
 |noToolbar|bool|false|false|Hide the toolbar (selection info and buttons)|
 |noSettings|bool|false|false|Hide the settings icon|
-|t|function|false|function which retrieves a string from a react i18next like string id|Function used to retrieve translated content|
 |fromStorage|function|false|localStorage reading function|Function used to retrieve data from storage, can be async. Storage is used to save table settings and columns resizing data.|
 |toStorage|function|false|localStorage writing function|Function used to store data to storage, can be async|
 |storePageAndSortInSession|bool|false|true|Whether to save current page and sorting field and direction in a session storage|
@@ -115,7 +129,8 @@ It's designed to work with MUI, but you can write yoor own adapter to support ot
 ## RTK utils
 
 You can use an utility hook to avoid too much boilerplate code:
-```javascript
+
+``` javascript
 const { qs, data, isFetching, refetch, refreshData, count } = useRtkQuery(
   'campaigns', // dataTableId
   useCampaignsQuery, // rtk endpoint
@@ -169,8 +184,10 @@ export default {
   ],
 }
 ```
+
 ## Actions
-```javascript
+
+``` javascript
 actions: PropTypes.arrayOf(
   PropTypes.shape({
     id: PropTypes.string.isRequired,
@@ -185,7 +202,7 @@ actions: PropTypes.arrayOf(
 
 The `onAction` callback receives the following argument:
 
-```
+``` javascript
 {
   id: 'action id',
   record, // if record action, the record
@@ -193,12 +210,25 @@ The `onAction` callback receives the following argument:
 }
 ```
 
-## Adapters
+## Adapters & Customization
 
-The DataTable uses many UI components. It comes with a MUI adapter. You can write your own adapters, make sure to export all the components you may find in `Adapters/Mui/Styled`.
-Adapters components are retrieved through an AdapterContext.
+DataTable uses many UI components. It comes with a MUI adapter. You can write your own adapters, or override the default one in some parts, but make sure to export all the components exported in `Adapters/Mui/MuiAdapterContext`.
+
+Example:
+
+``` jsx
+// import MuiAdapterContext from 'DataTable/Adapters/Mui/MuiAdapterContext'
+// import styled from 'styled-components'
+
+const NewTableRow = styled.tr`background: #eee;`
+
+<DataTableProvider context={{ ...MuiAdapterContext, TableRow: NewTableRow, t: (stringId) => stringId }}>
+	<DataTable .../>
+</DataTableProvider>
+```
 
 ## Development
+
 ```
 yarn dev
 ```

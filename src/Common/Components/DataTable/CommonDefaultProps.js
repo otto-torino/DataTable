@@ -1,5 +1,4 @@
 import { fromSessionStorage, fromStorage, toSessionStorage, toStorage } from "./Storage";
-import { defaultT } from "./Utils";
 import  { T } from "ramda"
 
 export default {
@@ -8,7 +7,6 @@ export default {
   noBulkSelection: false,
   noAllSelection: false,
   renderContext: {},
-  t: defaultT,
   fromStorage,
   toStorage,
   fromSessionStorage,

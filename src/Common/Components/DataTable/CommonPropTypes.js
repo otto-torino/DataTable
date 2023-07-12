@@ -55,8 +55,6 @@ export default {
   noToolbar: PropTypes.bool,
   // disable settings dialog
   noSettings: PropTypes.bool,
-  // translation function
-  t: PropTypes.func,
   // retrieve from storage
   fromStorage: PropTypes.func,
   // save to storage

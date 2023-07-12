@@ -1,11 +1,10 @@
 import PropTypes from 'prop-types'
 import { range } from 'ramda'
 import { useContext } from 'react'
-
-import { AdapterContext } from './AdapterProvider'
+import { DataTableContext } from './DataTableProvider'
 
 const Loader = ({ minHeight, size, skeleton, justifyStart, color, text, display, style, skeletonHeight }) => {
-  const { CircularProgress, LoaderWrapper, Skeleton } = useContext(AdapterContext)
+  const { CircularProgress, LoaderWrapper, Skeleton } = useContext(DataTableContext)
   return (
     <LoaderWrapper minHeight={minHeight} justifyStart={justifyStart} display={display} style={style}>
       {skeleton && (

@@ -3,15 +3,15 @@ import { defaultTo, isNil, isNotNil } from 'ramda'
 import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { CSVLink } from 'react-csv'
 
-import { AdapterContext } from './AdapterProvider'
+import { DataTableInternalContext } from './DataTableInternalProvider'
 import { DataTableContext } from './DataTableProvider'
 import Loader from './Loader'
 import { getCsvValue, withEventValue } from './Utils'
 
 const ExportAction = () => {
-  const { Dialog, DialogContent, IconButton, TextField, Alert, DialogActions, Button, Tooltip, Save } =
-    useContext(AdapterContext)
-  const { t, displayColumns, sortedData, renderContext, id, exportApi, sort, qsAdditions } = useContext(DataTableContext)
+  const { t, Dialog, DialogContent, IconButton, TextField, Alert, DialogActions, Button, Tooltip, Save } =
+    useContext(DataTableContext)
+  const { displayColumns, sortedData, renderContext, id, exportApi, sort, qsAdditions } = useContext(DataTableInternalContext)
   const [fileName, setFileName] = React.useState(`${new Date().toDateString().replace(/ /g, '-')}-${id}.csv`)
   const [isOpen, setIsOpen] = useState(false)
   const [csvData, setCsvData] = useState(null)

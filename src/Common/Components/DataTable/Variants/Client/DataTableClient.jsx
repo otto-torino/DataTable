@@ -5,7 +5,7 @@ import CommonDefaultProps from '../../CommonDefaultProps'
 import CommonPropTypes from '../../CommonPropTypes'
 import Config from '../../Config'
 import DataTableBase from '../../DataTableBase'
-import DataTableProvider from '../../DataTableProvider'
+import DataTableInternalProvider from '../../DataTableInternalProvider'
 import { useResizableColumns, useSelection, useSettingsDialog, useStorageData } from '../../Hooks'
 import { getResizing } from '../../Storage'
 import { applyFullTextSearchFilter, getRecordActions } from '../../Utils'
@@ -133,7 +133,7 @@ const DataTableClient = memo((props) => {
   })
 
   return isIniting ? null : (
-    <DataTableProvider
+    <DataTableInternalProvider
       context={{
         ...props,
         page,
@@ -176,7 +176,7 @@ const DataTableClient = memo((props) => {
       }}
     >
       <DataTableBase />
-    </DataTableProvider>
+    </DataTableInternalProvider>
   )
 })
 DataTableClient.displayName = 'DataTableClient'

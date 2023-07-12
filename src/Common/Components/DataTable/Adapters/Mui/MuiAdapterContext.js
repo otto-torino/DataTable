@@ -9,6 +9,7 @@ import {
   FilterAlt,
   FilterAltOff,
   Settings,
+  Help,
 } from '@mui/icons-material'
 
 import {
@@ -104,4 +105,5 @@ export default {
   FilterAlt,
   FilterAltOff,
   Settings,
+  Help,
 }

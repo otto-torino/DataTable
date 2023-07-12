@@ -1,17 +1,17 @@
 import { useContext } from "react"
-import { AdapterContext } from "./AdapterProvider"
+import { DataTableContext } from "./DataTableProvider"
 import BulkActionsFullTextSearchBar from "./BulkActionsFullTextSearchBar"
 import DataTableBody from "./DataTableBody"
 import DataTableHead from "./DataTableHead"
-import { DataTableContext } from "./DataTableProvider"
+import { DataTableInternalContext } from "./DataTableInternalProvider"
 import Loader from "./Loader"
 import SettingsDialog from "./SettingsDialog"
 import TablePagination from "./TablePagination"
 import Toolbar from "./Toolbar"
 
 const DataTableBase = () => {
-  const { TableContainer, Table } = useContext(AdapterContext)
-  const { size, id, displayData, isLoading, pageSize, settingsDialogIsOpen, noColumnsResizing } = useContext(DataTableContext)
+  const { TableContainer, Table } = useContext(DataTableContext)
+  const { size, id, displayData, isLoading, pageSize, settingsDialogIsOpen, noColumnsResizing } = useContext(DataTableInternalContext)
   return (
     <>
       <BulkActionsFullTextSearchBar />

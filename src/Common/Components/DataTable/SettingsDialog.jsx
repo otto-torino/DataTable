@@ -1,12 +1,13 @@
 import { always, compose, equals, ifElse, isNil, max, not, path, pipe, prop, propEq } from 'ramda'
 import { useContext } from 'react'
+import { DataTableInternalContext } from './DataTableInternalProvider'
 
-import { AdapterContext } from './AdapterProvider'
 import { DataTableContext } from './DataTableProvider'
 import { Container, Draggable } from './Lib/DragAndDrop'
 
 const SettingsDialog = () => {
   const {
+    t,
     Button,
     Checkbox,
     Dialog,
@@ -21,9 +22,8 @@ const SettingsDialog = () => {
     Select,
     TextField,
     DragHandle,
-  } = useContext(AdapterContext)
+  } = useContext(DataTableContext)
   const {
-    t,
     handleCloseSettings,
     handleResetSettings,
     handleSaveSettings,
@@ -37,7 +37,7 @@ const SettingsDialog = () => {
     setColumnsSettings,
     columnsSettings,
     size,
-  } = useContext(DataTableContext)
+  } = useContext(DataTableInternalContext)
   const selected = columnsSettings.filter(prop('visible')).map(prop('id'))
   const handlePageSizeChange = pipe(path(['target', 'value']), (v) => parseInt(v), max(1), setPageSize)
   const handleChangeDefaultSortField = (evt) => setSort({ ...sort, field: evt.target.value })

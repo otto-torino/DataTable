@@ -6,7 +6,7 @@ import CommonDefaultProps from '../../CommonDefaultProps'
 import CommonPropTypes from '../../CommonPropTypes'
 import Config from '../../Config'
 import DataTableBase from '../../DataTableBase'
-import DataTableProvider from '../../DataTableProvider'
+import DataTableInternalProvider from '../../DataTableInternalProvider'
 import { useDebounce, useResizableColumns, useSelection, useSettingsDialog, useStorageData } from '../../Hooks'
 import {
   getResizing,
@@ -159,7 +159,7 @@ const DataTableRtk = memo((props) => {
   })
 
   return isIniting ? null : (
-    <DataTableProvider
+    <DataTableInternalProvider
       context={{
         ...props,
         page,
@@ -201,7 +201,7 @@ const DataTableRtk = memo((props) => {
       }}
     >
       <DataTableBase />
-    </DataTableProvider>
+    </DataTableInternalProvider>
   )
 })
 DataTableRtk.displayName = 'DataTableRtk'
