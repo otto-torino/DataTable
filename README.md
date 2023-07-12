@@ -4,6 +4,8 @@
 
 |Prop|Type|Required|Default|Description|
 |:---|:---|:-------|:-------|:-----------|
+|adapter|string|false|mui|ui adapter|
+|variant|string|false|client|datatable variant: client \| rtk|
 |id|string|true||Unique identifier of the datatable|
 |size|string|false|small|Size of the table and of the fields|
 |selectable|bool\|function|true|false|Whether to allow rows selection or not. If a function will be called for each record, and the checkbox is shown if it returns true|
