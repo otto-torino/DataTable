@@ -3,7 +3,7 @@ import { useContext } from 'react'
 
 import { AdapterContext } from './AdapterProvider'
 import { DataTableContext } from './DataTableProvider'
-import { Container, Draggable } from './DragAndDrop'
+import { Container, Draggable } from './Lib/DragAndDrop'
 
 const SettingsDialog = () => {
   const {
