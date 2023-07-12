@@ -17,10 +17,10 @@
 |data|array|true||The table data|
 |onRefetch|function|false||A function which activate the refetch button and it's called when clicking it|
 |isLoading|bool|false|false|If data are being fetched|
-|defaultPageSize|int|false||The default page size. Page size is determined with the following priority: stored value - this prop - model defined - a constant (10)|
+|defaultPageSize|int|false||The default page size. Page size is determined with the following priority: stored value - this prop - model defined - config (10)|
 |noPageInputField|bool|false|false|Hide the page input field|
-|defaultSortField|string|false||The default sorting field. Sorting field is determined with the following priority: stored value - this prop - model defined - a constant (`id`)|
-|defaultSortDirection|string|false||The default sorting direction (`asc` \| `desc`). Sorting direction is determined with the following priority: stored value - this prop - model defined - a constant (`asc`)|
+|defaultSortField|string|false||The default sorting field. Sorting field is determined with the following priority: stored value - this prop - model defined - config (`id`)|
+|defaultSortDirection|string|false||The default sorting direction (`asc` \| `desc`). Sorting direction is determined with the following priority: stored value - this prop - model defined - config (`asc`)|
 |noSorting|bool|false|false|Disable sorting|
 |renderContext|object|false|{}|A context passed to the model render function, used to customize field value|
 |noToolbar|bool|false|false|Hide the toolbar (selection info and buttons)|

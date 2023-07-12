@@ -39,7 +39,7 @@ export const useSorting = (
   toSessionStorage,
 ) => {
   const [sort, baseSetSort] = useState({
-    fieldId: useSessionStorage ? defaultTo(defaultSortField, sessionStorageData?.sort?.fieldId) : defaultSortField,
+    field: useSessionStorage ? defaultTo(defaultSortField, sessionStorageData?.sort?.field) : defaultSortField,
     direction: useSessionStorage
       ? defaultTo(defaultSortField, sessionStorageData?.sort?.direction)
       : defaultSortDirection,
@@ -57,23 +57,25 @@ export const useSorting = (
     [toSessionStorage, id, JSON.stringify(sessionStorageData), useSessionStorage],
   )
 
-  const handleSortChange = (fieldId) => () =>
+  const handleSortChange = (field) => () =>
     setSort({
-      fieldId,
-      direction: sort.fieldId === fieldId && sort.direction === 'asc' ? 'desc' : 'asc',
+      field,
+      direction: sort.field === field && sort.direction === 'asc' ? 'desc' : 'asc',
     })
 
-  const getSortingValue = (record, fieldId) => {
-    const field = getFieldById(model, fieldId)
-    if (field.sortingValue) {
-      return field.sortingValue(record)
+  const getSortingValue = (record, field) => {
+    const modelField = getFieldById(model, field)
+    console.log('MODEL VALUE', model, modelField) // eslint-disable-line
+    if (modelField.sortingValue) {
+      return modelField.sortingValue(record)
     }
-    return getRawValue(record, model.fields.find(propEq(fieldId, 'id')))
+    return getRawValue(record, modelField)
   }
 
   const sortingComparison = (a, b) => {
-    const aValue = getSortingValue(a, sort.fieldId)
-    const bValue = getSortingValue(b, sort.fieldId)
+    const aValue = getSortingValue(a, sort.field)
+    const bValue = getSortingValue(b, sort.field)
+
     return ifElse(isNil, always(1), () =>
       ifElse(isNil, always(-1), () => (bValue < aValue ? 1 : -1) * (sort.direction === 'asc' ? 1 : -1))(bValue),
     )(aValue)
@@ -81,7 +83,7 @@ export const useSorting = (
 
   const resetSort = () => {
     setSort({
-      fieldId: defaultSortField,
+      field: defaultSortField,
       direction: defaultSortDirection,
     })
   }

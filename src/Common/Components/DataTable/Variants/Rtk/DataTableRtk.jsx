@@ -1,14 +1,13 @@
 import PropTypes from 'prop-types'
 import { assoc, compose, isEmpty, isNil, isNotNil, not, or, pick, propEq, T } from 'ramda'
-import React, { memo, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import React, { memo, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 
 import ActionsButton from '../../ActionsButton'
 import { AdapterContext } from '../../AdapterProvider'
 import BulkActionsFullTextSearchBar from '../../BulkActionsFullTextSearchBar'
 import { BULK_ACTION_TYPE, RECORD_ACTION_TYPE } from '../../Constants'
 import DataTableProvider from '../../DataTableProvider'
-import { PAGE_SIZE, SORT_DIRECTION, SORT_FIELD } from '../../Defaults'
-import { usePagination, useSorting } from '../Client/Hooks'
+import { usePagination, useSorting } from './Hooks'
 import { useResizableColumns, useSelection } from '../../Hooks'
 import SettingsDialog from '../../SettingsDialog'
 import {
@@ -24,13 +23,13 @@ import {
 import TablePagination from '../../TablePagination'
 import Toolbar from '../../Toolbar'
 import {
-  applyFullTextSearchFilter,
   createColumnsPropsWithStorage,
   defaultT,
   getPrimaryKey,
   getRecordActions,
   getValue,
 } from '../../Utils'
+import Config from '../../Config'
 
 const DataTableRtk = memo((props) => {
   const {
@@ -61,6 +60,9 @@ const DataTableRtk = memo((props) => {
     onExpandRowCondition,
     noColumnsResizing,
     noSticky,
+    qsAdditions,
+    refreshData,
+    count,
   } = props
 
   // ui components
@@ -84,21 +86,20 @@ const DataTableRtk = memo((props) => {
   const sessionStorageData = fromSessionStorage(id, {})
 
   // pagination
-  const { page, setPage, pageSize, setPageSize, paginate, resetPageSize } = usePagination(
+  const { page, setPage, pageSize, setPageSize, resetPageSize } = usePagination(
     id,
     0,
-    defaultPageSize || model.pageSize || PAGE_SIZE,
+    defaultPageSize || model.pageSize || Config.defaultPageSize,
     storePageAndSortInSession,
     sessionStorageData,
     toSessionStorage,
   )
 
   // sorting
-  const { sort, setSort, handleSortChange, sortingComparison, resetSort } = useSorting(
+  const { sort, setSort, handleSortChange, resetSort } = useSorting(
     id,
-    defaultSortField || model.sort?.field || SORT_FIELD,
-    defaultSortDirection || model.sort?.direction || SORT_DIRECTION,
-    model,
+    defaultSortField || model.sort?.field || Config.defaultSortField,
+    defaultSortDirection || model.sort?.direction || Config.defaultSortDirection,
     storePageAndSortInSession,
     sessionStorageData,
     toSessionStorage,
@@ -158,15 +159,40 @@ const DataTableRtk = memo((props) => {
   const displayColumns = columnsSettings.filter(propEq(true, 'visible')).map(({ id }) => columns.find(propEq(id, 'id')))
 
   // prepare data
-  const filteredData = data.filter(
-    applyFullTextSearchFilter(
-      fullTextSearchFields.map((f) => model.fields.find(propEq(f, 'id'))),
-      fullTextSearch,
-    ),
-  )
-  const sortedData = filteredData.sort(sortingComparison)
-  const displayData = paginate(sortedData)
+  const displayData = data
   const colSpan = displayColumns.length + (selectable ? 1 : 1) + ((actions && actions.length) || onExpandRow ? 1 : 0)
+
+  // data refreshing
+  // reset page when changing filtering
+  const prevQsAdditions = useRef(JSON.stringify(qsAdditions))
+  useEffect(() => {
+    if (
+      prevQsAdditions.current &&
+      prevQsAdditions.current !== JSON.stringify(qsAdditions)
+    ) {
+      setPage(0)
+    }
+    prevQsAdditions.current = JSON.stringify(qsAdditions)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [JSON.stringify(qsAdditions)])
+
+  // data refreshing
+  useEffect(() => {
+    refreshData({
+      base: {
+        pageSize: Math.max(1, pageSize),
+        page,
+        orderBy: sort.field,
+        orderType: sort.direction,
+      },
+      qsAdditions: { ...qsAdditions },
+    })
+
+    if (onExpandRow) {
+      setExpandedRow(null)
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [JSON.stringify(qsAdditions), page, sort, pageSize, refreshData, onExpandRow])
 
   // selection
   const {
@@ -198,7 +224,6 @@ const DataTableRtk = memo((props) => {
         setSort,
         selected,
         onSelect,
-        sortedData,
         displayData,
         handleSelectAll,
         handleClearSelection,
@@ -216,6 +241,7 @@ const DataTableRtk = memo((props) => {
         columnsSettings,
         fullTextSearch,
         setFullTextSearch,
+        count,
       }}
     >
       <BulkActionsFullTextSearchBar />
@@ -248,14 +274,12 @@ const DataTableRtk = memo((props) => {
                     stickyLeft={idx === 0 && !noSticky}
                     key={column.id}
                     data-id={column.id}
-                    className={`th-col-name${
-                      idx === displayColumns.length - 1 && !recordActions.length && !onExpandRow ? ' resizable-fix' : ''
-                    }`}
+                    className={`th-col-name`}
                   >
                     {!noSorting && !column.disableSorting ? (
                       <TableSortLabel
-                        active={sort.fieldId === column.id}
-                        direction={sort.fieldId === column.id ? sort.direction : 'asc'}
+                        active={sort.field === column.id}
+                        direction={sort.field === column.id ? sort.direction : 'asc'}
                         onClick={handleSortChange(column.id)}
                       >
                         {column.label}
@@ -266,8 +290,8 @@ const DataTableRtk = memo((props) => {
                   </TableCell>
                 )
               })}
-              {(recordActions.length > 0 || onExpandRow) && (
-                <TableCell stickyRight={!noSticky} className="resizable-fix" />
+              {(recordActions.length > 0 || onExpandRow || !noColumnsResizing) && (
+                <TableCell className="resizable-fix" />
               )}
             </TableRow>
           </TableHead>
@@ -310,6 +334,9 @@ const DataTableRtk = memo((props) => {
                         </Box>
                       </TableCell>
                     )}
+                    {(recordActions.length == 0 && !onExpandRow && !noColumnsResizing) && (
+                      <TableCell />
+                    )}
                   </TableRow>
                   {onExpandRow && (
                     <TableRow key={`expanded-${pk}`}>
@@ -348,6 +375,7 @@ DataTableRtk.defaultProps = {
   actions: [],
   fullTextSearchFields: [],
   onExpandRowCondition: T,
+  count: -1,
 }
 
 DataTableRtk.propTypes = {
@@ -380,7 +408,7 @@ DataTableRtk.propTypes = {
   // 1. stored value
   // 2. defaultPageSize prop
   // 3. model.pageSize
-  // 4. PAGE_SIZE constant
+  // 4. Config.defaultPageSize
   defaultPageSize: PropTypes.number,
   // disable page number input field
   noPageInputField: PropTypes.bool,
@@ -388,13 +416,13 @@ DataTableRtk.propTypes = {
   // 1. stored value
   // 2. defaultSortField prop
   // 3. model.sort.field
-  // 4. SORT_FIELD constant
+  // 4. Config.defaultSortField
   defaultSortField: PropTypes.string,
   // sort direction determined with the following precedence order:
   // 1. stored value
   // 2. defaultSortDirection prop
   // 3. model.sort.direction
-  // 4. SORT_DIRECTION constant
+  // 4. Config.defaultSortDirection
   defaultSortDirection: PropTypes.string,
   // disable sorting
   noSorting: PropTypes.bool,
@@ -448,6 +476,12 @@ DataTableRtk.propTypes = {
   noColumnsResizing: PropTypes.bool,
   // disable first and last columns sticky position
   noSticky: PropTypes.bool,
+  // portion if query string other than pagination and sorting
+  qsAdditions: PropTypes.object,
+  // refresh data
+  refreshData: PropTypes.func,
+  // total data length
+  count: PropTypes.number,
 }
 
 export default DataTableRtk

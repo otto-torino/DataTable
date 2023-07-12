@@ -40,7 +40,7 @@ const SettingsDialog = () => {
   } = useContext(DataTableContext)
   const selected = columnsSettings.filter(prop('visible')).map(prop('id'))
   const handlePageSizeChange = pipe(path(['target', 'value']), (v) => parseInt(v), max(1), setPageSize)
-  const handleChangeDefaultSortField = (evt) => setSort({ ...sort, fieldId: evt.target.value })
+  const handleChangeDefaultSortField = (evt) => setSort({ ...sort, field: evt.target.value })
   const handleChangeDefaultSortDirection = (evt) => setSort({ ...sort, direction: evt.target.value })
 
   const handleSelectColumn = (id) => (event) => {
@@ -103,7 +103,7 @@ const SettingsDialog = () => {
               <Select
                 required
                 size="small"
-                value={sort.fieldId}
+                value={sort.field}
                 label={t('common:dataTable.DefaultSortField')}
                 onChange={handleChangeDefaultSortField}
               >

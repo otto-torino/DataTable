@@ -7,12 +7,12 @@ import { withEventValue } from './Utils'
 
 const TablePagination = () => {
   const { TablePagination: BaseTablePagination, Box, PageLabel, PageInput } = useContext(AdapterContext)
-  const { page, data, pageSize, setPage, noPageInputField } = useContext(DataTableContext)
+  const { page, data, pageSize, setPage, noPageInputField, count } = useContext(DataTableContext)
 
   const muiProps = {
     rowsPerPageOptions: [pageSize],
     component: 'div',
-    count: data.length,
+    count,
     rowsPerPage: pageSize,
     page,
     onPageChange: (_, page) => setPage(page),
@@ -26,7 +26,7 @@ const TablePagination = () => {
   }, [page])
 
   React.useEffect(() => {
-    if (value > 0 && (data.length === -1 || (value - 1) * pageSize <= data.length)) {
+    if (value > 0 && (count === -1 || (value - 1) * pageSize <= count)) {
       setWarning(false)
       setPage(value - 1)
     } else {

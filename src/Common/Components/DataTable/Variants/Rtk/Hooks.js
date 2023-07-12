@@ -1,30 +1,28 @@
 import { defaultTo } from 'ramda'
-import { useState } from 'react'
-import { PAGE_SIZE } from '../../Defaults'
+import { useCallback, useState } from 'react'
+import Config from '../../Config'
 import { fromStorage as defaultFromStorage, getSettingPageSize, getSettingSort } from '../../Storage'
-
-const defaultAdapter = (pageSize, page, sort) => ({
-  top: pageSize,
-  skip: (page - 1) * pageSize,
-  orderby: sort.field,
-  ordertype: sort.direction,
-})
 
 export const useRtkQuery = (dataTableId, endpoint, qsAdditions, defaultSort, opts) => {
   const fromStorage = opts?.fromStorage || defaultFromStorage
   const storageData = fromStorage(dataTableId, {})
-  const pageSize = defaultTo(PAGE_SIZE, getSettingPageSize(storageData))
+  const pageSize = defaultTo(Config.defaultPageSize, getSettingPageSize(storageData))
   const dftSort = defaultTo(defaultSort, getSettingSort(storageData))
-  const adapter = opts?.adapter || defaultAdapter
+  const getCount = opts?.getCount || ((data) => data?.count || -1)
 
   const [qs, setQs] = useState({
-    base: adapter(pageSize, 1, dftSort),
+    base: {
+      page: 0,
+      pageSize,
+      orderBy: dftSort.field,
+      orderType: dftSort.direction,
+    },
     qsAdditions,
   })
   const refreshData = setQs
-  const { data, orData, isFetching, refetch } = endpoint({ ...qs.base, ...qs.qsAdditions })
+  const { data, isFetching, refetch } = endpoint({ ...qs.base, ...qs.qsAdditions })
 
-  const count = orData?.data['count'] || -1
+  const count = getCount(data)
 
   return {
     qs,
@@ -36,4 +34,71 @@ export const useRtkQuery = (dataTableId, endpoint, qsAdditions, defaultSort, opt
     dftSortField: dftSort.field,
     dftSortDirection: dftSort.direction,
   }
+}
+
+export const usePagination = (
+  id,
+  defaultPage,
+  defaultPageSize,
+  useSessionStorage,
+  sessionStorageData,
+  toSessionStorage,
+) => {
+  const [page, baseSetPage] = useState(
+    useSessionStorage ? defaultTo(defaultPage, sessionStorageData?.page) : defaultPage,
+  )
+  const [pageSize, setPageSize] = useState(defaultPageSize)
+
+  const setPage = (page) => {
+    if (useSessionStorage) {
+      toSessionStorage(id, { ...sessionStorageData, page })
+    }
+    return baseSetPage(page)
+  }
+  const resetPageSize = () => setPageSize(defaultPageSize)
+
+  return { page, setPage, pageSize, setPageSize, resetPageSize }
+}
+
+export const useSorting = (
+  id,
+  defaultSortField,
+  defaultSortDirection,
+  useSessionStorage,
+  sessionStorageData,
+  toSessionStorage,
+) => {
+  const [sort, baseSetSort] = useState({
+    field: useSessionStorage ? defaultTo(defaultSortField, sessionStorageData?.sort?.field) : defaultSortField,
+    direction: useSessionStorage
+      ? defaultTo(defaultSortField, sessionStorageData?.sort?.direction)
+      : defaultSortDirection,
+  })
+
+  const setSort = useCallback(
+    (sort) => {
+      if (useSessionStorage) {
+        toSessionStorage(id, { ...sessionStorageData, sort })
+      }
+      return baseSetSort(sort)
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [toSessionStorage, id, JSON.stringify(sessionStorageData), useSessionStorage],
+  )
+
+  const handleSortChange = (field) => () =>
+    setSort({
+      field,
+      direction: sort.field === field && sort.direction === 'asc' ? 'desc' : 'asc',
+    })
+
+  const resetSort = () => {
+    setSort({
+      field: defaultSortField,
+      direction: defaultSortDirection,
+    })
+  }
+
+  return { sort, setSort, handleSortChange, resetSort }
 }

@@ -7,7 +7,6 @@ import { AdapterContext } from '../../AdapterProvider'
 import BulkActionsFullTextSearchBar from '../../BulkActionsFullTextSearchBar'
 import { BULK_ACTION_TYPE, RECORD_ACTION_TYPE } from '../../Constants'
 import DataTableProvider from '../../DataTableProvider'
-import { PAGE_SIZE, SORT_DIRECTION, SORT_FIELD } from '../../Defaults'
 import { usePagination, useSorting } from './Hooks'
 import { useResizableColumns, useSelection } from '../../Hooks'
 import SettingsDialog from '../../SettingsDialog'
@@ -31,6 +30,8 @@ import {
   getRecordActions,
   getValue,
 } from '../../Utils'
+import Config from '../../Config'
+import { NorthEast } from '@mui/icons-material'
 
 const DataTableClient = memo((props) => {
   const {
@@ -87,7 +88,7 @@ const DataTableClient = memo((props) => {
   const { page, setPage, pageSize, setPageSize, paginate, resetPageSize } = usePagination(
     id,
     0,
-    defaultPageSize || model.pageSize || PAGE_SIZE,
+    defaultPageSize || model.pageSize || Config.defaultPageSize,
     storePageAndSortInSession,
     sessionStorageData,
     toSessionStorage,
@@ -96,8 +97,8 @@ const DataTableClient = memo((props) => {
   // sorting
   const { sort, setSort, handleSortChange, sortingComparison, resetSort } = useSorting(
     id,
-    defaultSortField || model.sort?.field || SORT_FIELD,
-    defaultSortDirection || model.sort?.direction || SORT_DIRECTION,
+    defaultSortField || model.sort?.field || Config.defaultSortField,
+    defaultSortDirection || model.sort?.direction || Config.defaultSortDirection,
     model,
     storePageAndSortInSession,
     sessionStorageData,
@@ -216,6 +217,7 @@ const DataTableClient = memo((props) => {
         columnsSettings,
         fullTextSearch,
         setFullTextSearch,
+        count: data.length,
       }}
     >
       <BulkActionsFullTextSearchBar />
@@ -248,14 +250,12 @@ const DataTableClient = memo((props) => {
                     stickyLeft={idx === 0 && !noSticky}
                     key={column.id}
                     data-id={column.id}
-                    className={`th-col-name${
-                      idx === displayColumns.length - 1 && !recordActions.length && !onExpandRow ? ' resizable-fix' : ''
-                    }`}
+                    className={`th-col-name`}
                   >
                     {!noSorting && !column.disableSorting ? (
                       <TableSortLabel
-                        active={sort.fieldId === column.id}
-                        direction={sort.fieldId === column.id ? sort.direction : 'asc'}
+                        active={sort.field === column.id}
+                        direction={sort.field === column.id ? sort.direction : 'asc'}
                         onClick={handleSortChange(column.id)}
                       >
                         {column.label}
@@ -266,8 +266,8 @@ const DataTableClient = memo((props) => {
                   </TableCell>
                 )
               })}
-              {(recordActions.length > 0 || onExpandRow) && (
-                <TableCell stickyRight={!noSticky} className="resizable-fix" />
+              {(recordActions.length > 0 || onExpandRow || !noColumnsResizing) && (
+                <TableCell className="resizable-fix" />
               )}
             </TableRow>
           </TableHead>
@@ -309,6 +309,9 @@ const DataTableClient = memo((props) => {
                           )}
                         </Box>
                       </TableCell>
+                    )}
+                    {(recordActions.length == 0 && !onExpandRow && !noColumnsResizing) && (
+                      <TableCell />
                     )}
                   </TableRow>
                   {onExpandRow && (
@@ -380,7 +383,7 @@ DataTableClient.propTypes = {
   // 1. stored value
   // 2. defaultPageSize prop
   // 3. model.pageSize
-  // 4. PAGE_SIZE constant
+  // 4. Config.defaultPageSize
   defaultPageSize: PropTypes.number,
   // disable page number input field
   noPageInputField: PropTypes.bool,
@@ -388,13 +391,13 @@ DataTableClient.propTypes = {
   // 1. stored value
   // 2. defaultSortField prop
   // 3. model.sort.field
-  // 4. SORT_FIELD constant
+  // 4. Config.defaultSortField
   defaultSortField: PropTypes.string,
   // sort direction determined with the following precedence order:
   // 1. stored value
   // 2. defaultSortDirection prop
   // 3. model.sort.direction
-  // 4. SORT_DIRECTION constant
+  // 4. Config.defaultSortDirection
   defaultSortDirection: PropTypes.string,
   // disable sorting
   noSorting: PropTypes.bool,

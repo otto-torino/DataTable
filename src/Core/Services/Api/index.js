@@ -26,12 +26,12 @@ export const api = createApi({
 })
 
 export const apiQueryString = (qs) => {
-  const { page, page_size, sort, sort_direction, ...rest } = qs
+  const { page, pageSize, orderBy, orderType, ...rest } = qs
   const more = Object.keys(rest)
     .map((k) => `${k}=${encodeURIComponent(rest[k])}`)
 
   return (
-    `page=${page}&page_size=${page_size}&sort=${sort}&sort_direction=${sort_direction}` +
+    `page=${page + 1}&page_size=${pageSize}&sort=${orderBy}&sort_direction=${orderType}` +
     (more.length ? '&' + more.join('&') : '')
   )
 }

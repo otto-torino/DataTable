@@ -11,18 +11,23 @@ export const getPrimaryKey = curry((model, record) => {
     .join('-')
 })
 
+// @TODO types
 export const getRawValue = (record, field) => {
+    const raw = field.id
+      .split('.')
+      .reduce((acc, curr) => (acc ? acc[curr] : null), record)
+
     switch (field.type) {
         case 'string':
-            return record[field.id]
+            return raw.toString()
         case 'int':
-            return parseInt(record[field.id])
+            return parseInt(raw)
         case 'float':
-            return parseFloat(record[field.id])
+            return parseFloat(raw)
         case 'boolean':
-            return record[field.id]
+            return raw
         default:
-            return record[field.id]
+            return raw
             
     }
 }

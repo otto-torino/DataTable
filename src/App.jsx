@@ -32,7 +32,6 @@ function App() {
     useCampaignsQuery, // rtk endpoint
     qsAdditions, // qs additions
     { field: 'id', direction: 'asc' }, // default sorting
-    { adapter: djangoApiAdapter },
   )
   console.log('DATA', data) // eslint-disable-line
 
@@ -69,6 +68,9 @@ function App() {
             selectable
             id="campaigns"
             data={defaultTo([], data?.results)}
+            count={count}
+            qsAdditions={qsAdditions}
+            refreshData={refreshData}
             model={Campaign}
             selected={selectedRtk}
             onSelect={setSelectedRtk}

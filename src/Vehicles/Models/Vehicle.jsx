@@ -26,18 +26,17 @@ export default {
       disableSorting: true,
     },
     {
-      id: 'status',
+      id: 'status.code',
       label: 'Status',
       type: 'string',
       render: (record) => {
         return (
           <div>
-            <span style={{ color: 'blue' }}>{record.status}</span>
+            <span style={{ color: 'blue' }}>{record.status.code}</span>
           </div>
         )
       },
-      sortingValue: record => record.status,
-      csvValue: record => 'cippa'
+      csvValue: record => record.status.id,
     },
   ],
 }
