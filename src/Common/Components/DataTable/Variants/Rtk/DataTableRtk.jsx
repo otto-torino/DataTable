@@ -375,6 +375,7 @@ DataTableRtk.defaultProps = {
   actions: [],
   fullTextSearchFields: [],
   onExpandRowCondition: T,
+  qsAdditions: {},
   count: -1,
 }
 

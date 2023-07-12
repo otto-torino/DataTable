@@ -1,6 +1,52 @@
-# DataTable components
+# DataTable
 
-## Props
+This is a project used to implement the datatable component.
+
+Currently 2 kinds of datatable are implemented:
+- Client: manages a whole set of data (pagination, sorting and filtering can be addressed by the table itself clientside)
+- Rtk: manage a set of data retrieved through RTK query (server-side pagination sorting and filtering)
+
+## Example
+
+  ``` jsx
+  // the DataTable component is memoized, so pay attention to complex props!
+  const vehicles = [{ id: 1, name: 'FIAT 500'}, ...]
+  const LIST_DISPLAY = useMemo(() => ['id', 'name'], [])
+  const onFilter = useCallback(
+    (handleClose) => <Modal onClose={handleClose}>FILTERS</Modal>,
+    [Modal]
+  )
+  const onRefetch = useCallback(() => { /* refetch data */ }, [])
+  const onExpandRow = useCallback((record) => <div>Some record related stuff</div>, [])
+  const actions = useMemo(() => [{ id: 'EDIT', label: 'Edit', icon: <Edit /> }, ...], [])
+  const handleAction = useCallback((actionId, record, records) => { /* do something */ }, [])
+  const SEARCH_FIELDS = useMemo(() => ['id', 'name'], [])
+
+
+  return (
+    <DataTable
+      variant="client"
+      selectable
+      id="vehicles"
+      data={vehicles}
+      model={Vehicle}
+      selected={selected}
+      onSelect={setSelected}
+      onRefetch={onRefetch}
+      storePageAndSortInSession
+      listDisplay={LIST_DISPLAY}
+      onFilter={onFilter}
+      isFilterFormActive={false}
+      actions={actions}
+      onAction={handleAction}
+      fullTextSearchFields={SEARCH_FIELDS}
+      onExpandRow={onExpandRow}
+    />
+  )
+  ```
+
+
+## Common props
 
 |Prop|Type|Required|Default|Description|
 |:---|:---|:-------|:-------|:-----------|
@@ -44,6 +90,13 @@
 |noSticky|bool|false||Disable the sticky behavior of the first field column and the actions column |
 
 
+## Rtk props
+
+|Prop|Type|Required|Default|Description|
+|:---|:---|:-------|:-------|:-----------|
+|qsAdditions|object|false|{}|Querystring parameters other than pagination and sorting stuff|
+|refreshData|function|true||Function used to trigger a data refresh, it receives the new query string in the form `{ base: { page, pageSize, orderBy, orderType}, qsAdditions }`|
+|count|int|false|-1|The total number of table data, -1 means that total number is unknown|
 
 ## Model
 
@@ -114,6 +167,10 @@ The `onAction` callback receives the following argument:
 }
 ```
 
+## Adapters
+
+The DataTable uses many UI components. It comes with a MUI adapter. You can write your own adapters, make sure to export all the components you may find in `Adapters/Mui/Styled`.
+Adapters components are retrieved through an AdapterContext.
 
 ## Development
 ```
