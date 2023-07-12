@@ -6,6 +6,22 @@ Currently 2 kinds of datatable are implemented:
 - Client: manages a whole set of data (pagination, sorting and filtering can be addressed by the table itself clientside)
 - Rtk: manage a set of data retrieved through RTK query (server-side pagination sorting and filtering)
 
+It's designed to work with MUI, but you can write yoor own adapter to support other design frameworks
+
+## Dependencies
+
+- styled-components
+- smooth-dnd
+- redux (if using RTK DataTable)
+- react-redux (if using RTK DataTable)
+- @reduxjs/toolkit (if using RTK DataTable)
+- ramda
+- react-csv
+- @fontsource/roboto
+- @mui/icons-material
+- @mui/material
+- @mui/styled-engine-sc
+
 ## Example
 
   ``` jsx
