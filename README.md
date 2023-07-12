@@ -22,7 +22,6 @@ Currently 2 kinds of datatable are implemented:
   const handleAction = useCallback((actionId, record, records) => { /* do something */ }, [])
   const SEARCH_FIELDS = useMemo(() => ['id', 'name'], [])
 
-
   return (
     <DataTable
       variant="client"
@@ -44,7 +43,6 @@ Currently 2 kinds of datatable are implemented:
     />
   )
   ```
-
 
 ## Common props
 
@@ -90,13 +88,25 @@ Currently 2 kinds of datatable are implemented:
 |noSticky|bool|false||Disable the sticky behavior of the first field column and the actions column |
 
 
-## Rtk props
+## RTK props
 
 |Prop|Type|Required|Default|Description|
 |:---|:---|:-------|:-------|:-----------|
 |qsAdditions|object|false|{}|Querystring parameters other than pagination and sorting stuff|
 |refreshData|function|true||Function used to trigger a data refresh, it receives the new query string in the form `{ base: { page, pageSize, orderBy, orderType}, qsAdditions }`|
 |count|int|false|-1|The total number of table data, -1 means that total number is unknown|
+
+## RTK utils
+
+You can use an utility hook to avoid too much boilerplate code:
+```javascript
+const { qs, data, isFetching, refetch, refreshData, count } = useRtkQuery(
+  'campaigns', // dataTableId
+  useCampaignsQuery, // rtk endpoint
+  qsAdditions, // qs additions
+  { field: 'id', direction: 'asc' }, // default sorting
+)
+```
 
 ## Model
 
@@ -144,7 +154,7 @@ export default {
 }
 ```
 ## Actions
-```
+```javascript
 actions: PropTypes.arrayOf(
   PropTypes.shape({
     id: PropTypes.string.isRequired,

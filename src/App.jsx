@@ -19,13 +19,6 @@ function App() {
   const [selectedRtk, setSelectedRtk] = useState([])
   const [isVisible, setIsVisible] = useState(true)
 
-  const djangoApiAdapter = (pageSize, page, sort) => ({
-    page_size: pageSize,
-    page,
-    sort: sort.field,
-    direction: sort.direction,
-  })
-
   const qsAdditions = {}
   const { qs, data, isFetching, refetch, refreshData, count } = useRtkQuery(
     'campaigns', // dataTableId
