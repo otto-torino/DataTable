@@ -5,6 +5,7 @@
     "baseUrl": "./src",
     "paths": {
       "@Common/*": ["./Common/*"],
+      "@Core/*": ["./Core/*"],
       "@Fixtures/*": ["./Fixtures/*"],
       "@Theme": ["./Theme/index.js"],
       "@Theme/*": ["./Theme/*"],

@@ -2,14 +2,15 @@ import PropTypes from 'prop-types'
 import { assoc, compose, isEmpty, isNil, isNotNil, not, or, pick, propEq, T } from 'ramda'
 import React, { memo, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 
-import ActionsButton from './ActionsButton'
-import { AdapterContext } from './AdapterProvider'
-import BulkActionsFullTextSearchBar from './BulkActionsFullTextSearchBar'
-import { BULK_ACTION_TYPE, RECORD_ACTION_TYPE } from './Constants'
-import DataTableProvider from './DataTableProvider'
-import { PAGE_SIZE, SORT_DIRECTION, SORT_FIELD } from './Defaults'
-import { usePagination, useResizableColumns, useSelection, useSorting } from './Hooks'
-import SettingsDialog from './SettingsDialog'
+import ActionsButton from '../ActionsButton'
+import { AdapterContext } from '../AdapterProvider'
+import BulkActionsFullTextSearchBar from '../BulkActionsFullTextSearchBar'
+import { BULK_ACTION_TYPE, RECORD_ACTION_TYPE } from '../Constants'
+import DataTableProvider from '../DataTableProvider'
+import { PAGE_SIZE, SORT_DIRECTION, SORT_FIELD } from '../Defaults'
+import { usePagination, useSorting } from './Hooks'
+import { useResizableColumns, useSelection } from '../Hooks'
+import SettingsDialog from '../SettingsDialog'
 import {
   fromStorage as defaultFromStorage,
   getSettingPageSize,
@@ -19,9 +20,9 @@ import {
   toSessionStorage as defaultToSessionStorage,
   getSettingColumns,
   getResizing,
-} from './Storage'
-import TablePagination from './TablePagination'
-import Toolbar from './Toolbar'
+} from '../Storage'
+import TablePagination from '../TablePagination'
+import Toolbar from '../Toolbar'
 import {
   applyFullTextSearchFilter,
   createColumnsPropsWithStorage,
@@ -29,7 +30,7 @@ import {
   getPrimaryKey,
   getRecordActions,
   getValue,
-} from './Utils'
+} from '../Utils'
 
 const DataTableClient = memo((props) => {
   const {
@@ -236,7 +237,7 @@ const DataTableClient = memo((props) => {
               )}
               {displayColumns.map((column, idx) => {
                 let widthStyles = {}
-                if (!noColumnsResizing && resizingColumnsData[column.id]) {
+                if (!noColumnsResizing && resizingColumnsData?.[column.id]) {
                   const v = resizingColumnsData[column.id]
                   widthStyles = { ...widthStyles, width: v, minWidth: v, maxWidth: v }
                 }

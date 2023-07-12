@@ -1,4 +1,4 @@
-import { always, defaultTo, identity, ifElse, isNil, path, propOr } from 'ramda'
+import { always, defaultTo, identity, ifElse, isNil, path } from 'ramda'
 
 const app = 'DATA_TABLE'
 

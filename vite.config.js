@@ -8,6 +8,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@Common': path.resolve(__dirname, './src/Common'),
+      '@Core': path.resolve(__dirname, './src/Core'),
       '@Fixtures': path.resolve(__dirname, './src/Fixtures'),
       '@Theme': path.resolve(__dirname, './src/Theme'),
       '@Vehicles': path.resolve(__dirname, './src/Vehicles')

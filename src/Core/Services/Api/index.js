@@ -14,7 +14,7 @@ const baseQuery = fetchBaseQuery({
 })
 
 export const apiTags = [
-
+  "Campaign",
 ]
 
 // https://redux-toolkit.js.org/rtk-query/usage/code-splitting
@@ -24,3 +24,14 @@ export const api = createApi({
   tagTypes: apiTags,
   endpoints: () => ({}),
 })
+
+export const apiQueryString = (qs) => {
+  const { page, page_size, sort, sort_direction, ...rest } = qs
+  const more = Object.keys(rest)
+    .map((k) => `${k}=${encodeURIComponent(rest[k])}`)
+
+  return (
+    `page=${page}&page_size=${page_size}&sort=${sort}&sort_direction=${sort_direction}` +
+    (more.length ? '&' + more.join('&') : '')
+  )
+}
