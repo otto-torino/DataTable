@@ -4,24 +4,36 @@ import { useMemo, useState } from 'react'
 
 import DataTable from '@Common/Components/DataTable'
 import { BULK_ACTION_TYPE, RECORD_ACTION_TYPE } from '@Common/Components/DataTable/Constants'
+import { useRtkQuery } from '@Common/Components/DataTable/Variants/Rtk/Hooks'
+import { useCampaignsQuery } from '@Core/Services/Api/Campaigns'
 import Vehicles from '@Fixtures/Vehicles.json'
 import getTheme from '@Theme'
 import Vehicle from '@Vehicles/Models/Vehicle'
-import { useCampaignsQuery } from '@Core/Services/Api/Campaigns'
+import Campaign from './Campaigns/Model/Campaign'
+import { defaultTo } from 'ramda'
 
 function App() {
   const mode = 'light'
   const theme = useMemo(() => getTheme(mode), [mode])
   const [selected, setSelected] = useState([])
+  const [selectedRtk, setSelectedRtk] = useState([])
   const [isVisible, setIsVisible] = useState(true)
 
-  const qs = {
-    page: 1,
-    page_size: 10,
-    sort: 'id',
-    sort_direction: 'desc',
-  }
-  const { data } = useCampaignsQuery(qs)
+  const djangoApiAdapter = (pageSize, page, sort) => ({
+    page_size: pageSize,
+    page,
+    sort: sort.field,
+    direction: sort.direction,
+  })
+
+  const qsAdditions = {}
+  const { qs, data, isFetching, refetch, refreshData, count } = useRtkQuery(
+    'campaigns', // dataTableId
+    useCampaignsQuery, // rtk endpoint
+    qsAdditions, // qs additions
+    { field: 'id', direction: 'asc' }, // default sorting
+    { adapter: djangoApiAdapter },
+  )
   console.log('DATA', data) // eslint-disable-line
 
   const actions = [
@@ -56,20 +68,15 @@ function App() {
             variant="rtk"
             selectable
             id="campaigns"
-            data={Vehicles}
-            model={Vehicle}
-            selected={selected}
-            onSelect={setSelected}
+            data={defaultTo([], data?.results)}
+            model={Campaign}
+            selected={selectedRtk}
+            onSelect={setSelectedRtk}
             onRefetch={() => {}}
-            storePageAndSortInSession
-            listDisplay={['id', 'name', 'maxSpeed']}
+            listDisplay={['id', 'name']}
             onFilter={() => {}}
             isFilterFormActive={false}
-            actions={actions}
-            onAction={handleAction}
-            fullTextSearchFields={['name', 'status']}
-            onExpandRow_={() => <div style={{ height: '100px', background: 'red' }}>Hello</div>}
-            onExpandRowCondition={({ id }) => id % 2 === 0}
+            fullTextSearchFields={['name']}
           />
         )}
       </div>
