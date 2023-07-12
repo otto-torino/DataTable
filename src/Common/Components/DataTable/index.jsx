@@ -2,11 +2,11 @@ import PropTypes from 'prop-types'
 
 import AdapterProvider from './AdapterProvider'
 import MuiAdapter from './Adapters/Mui/MuiAdapter'
-import DataTableClient from './Client/DataTableClient'
-import DataTableRtk from './Rtk/DataTableRtk'
+import DataTableClient from './Variants/Client/DataTableClient'
+import DataTableRtk from './Variants/Rtk/DataTableRtk'
 
-const DataTable = ({ type, adapter, ...props }) => {
-  let Table = type === 'client' ? DataTableClient : DataTableRtk
+const DataTable = ({ variant, adapter, ...props }) => {
+  let Table = variant === 'client' ? DataTableClient : DataTableRtk
   let adapterContext = adapter === 'mui' ? MuiAdapter : MuiAdapter // @TODO other adapters
   return adapter ? (
     <AdapterProvider context={adapterContext}>
@@ -23,7 +23,7 @@ DataTable.defaultProps = {
 }
 
 DataTable.propTypes = {
-  type: PropTypes.oneOf(['client', 'rtk']),
+  variant: PropTypes.oneOf(['client', 'rtk']),
   adapter: PropTypes.oneOf(['mui']),
 }
 

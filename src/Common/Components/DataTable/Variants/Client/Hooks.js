@@ -1,7 +1,7 @@
 import { always, defaultTo, ifElse, isNil, propEq } from 'ramda'
 import { useCallback, useState } from 'react'
 
-import { getFieldById, getRawValue } from '../Utils'
+import { getFieldById, getRawValue } from '../../Utils'
 
 export const usePagination = (
   id,

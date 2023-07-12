@@ -53,7 +53,7 @@ function App() {
       <div>
         {isVisible && (
           <DataTable
-            type="rtk"
+            variant="rtk"
             selectable
             id="campaigns"
             data={Vehicles}
@@ -76,7 +76,7 @@ function App() {
       <div>
         {isVisible && (
           <DataTable
-            type="client"
+            variant="client"
             selectable
             id="vehicles"
             data={Vehicles}
