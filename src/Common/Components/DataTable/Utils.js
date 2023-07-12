@@ -19,7 +19,7 @@ export const getRawValue = (record, field) => {
 
     switch (field.type) {
         case 'string':
-            return raw.toString()
+            return raw?.toString() || raw
         case 'int':
             return parseInt(raw)
         case 'float':
@@ -81,7 +81,7 @@ export const createColumnsPropsWithStorage = (
     })
 
 // data related utils
-export const applyFullTextSearchFilter = (fullTextSearchFields, fullTextSearch) => (record) => {
+export const applyFullTextSearchFilter = (model, fullTextSearchFields, fullTextSearch) => (record) => {
   if (!fullTextSearch) {
     return true
   }

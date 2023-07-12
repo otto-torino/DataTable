@@ -121,7 +121,6 @@ export const TableRow = styled(MuiTableRow)`
 `
 export const TableCell = styled(MuiTableCell)`
   width: ${({ checkbox }) => (checkbox ? '20px' : 'auto')};
-  max-width: ${({ checkbox }) => (checkbox ? '20px' : 'auto')};
   ${({ stickyLeft, stickyRight, theme }) =>
     (stickyLeft || stickyRight) &&
     `position: sticky !important; z-index: 2; background: ${theme.palette.dataTableSticky.main} !important;`}

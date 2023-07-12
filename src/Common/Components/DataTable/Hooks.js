@@ -1,9 +1,9 @@
-import { compose, defaultTo, differenceWith, equals, not, uniqBy } from 'ramda'
-import { useEffect, useState } from 'react'
-import Config from './Config'
-import { getResizing } from './Storage'
+import { compose, defaultTo, differenceWith, equals, isEmpty, isNil, isNotNil, not, or, uniqBy } from 'ramda'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 
-import { createResizableColumn, getPrimaryKey } from './Utils'
+import Config from './Config'
+import { getResizing, getSettingColumns, getSettingPageSize, getSettingSort } from './Storage'
+import { createColumnsPropsWithStorage, createResizableColumn, getPrimaryKey } from './Utils'
 
 export const useDebounce = (value, delay = Config.debounceTime) => {
   const [debouncedValue, setDebouncedValue] = useState(value)
@@ -32,7 +32,11 @@ export const useSelection = (selected, onSelect, model) => {
 
   const handleSelectPage = (displayData) => (event) => {
     const checked = event.target.checked
-    onSelect(checked ? uniqBy(getPrimaryKey(model), [...selected, ...displayData]) : differenceWith(equals, selected, displayData))
+    onSelect(
+      checked
+        ? uniqBy(getPrimaryKey(model), [...selected, ...displayData])
+        : differenceWith(equals, selected, displayData),
+    )
   }
   const isRecordSelected = (pk) => selected.some(compose(equals(pk), getPrimaryKey(model)))
   const isPageSelected = (displayData) => {
@@ -45,19 +49,17 @@ export const useSelection = (selected, onSelect, model) => {
   const handleSelectAll = (data) => () => onSelect(data)
   const handleClearSelection = () => onSelect([])
 
-  return { handleSelectRecord, handleSelectPage, handleSelectAll, handleClearSelection, isRecordSelected, isPageSelected }
+  return {
+    handleSelectRecord,
+    handleSelectPage,
+    handleSelectAll,
+    handleClearSelection,
+    isRecordSelected,
+    isPageSelected,
+  }
 }
 
-
-export const useResizableColumns = (
-  id,
-  data,
-  displayColumns,
-  isLoading,
-  fromStorage,
-  toStorage,
-  { disabled },
-) => {
+export const useResizableColumns = (id, data, displayColumns, isLoading, fromStorage, toStorage, { disabled }) => {
   useEffect(() => {
     const run = async () => {
       if (!isLoading && !disabled) {
@@ -100,7 +102,8 @@ export const useResizableColumns = (
                   const rows = table.querySelectorAll(':scope > tbody > tr')
                   ;[].forEach.call(rows, function (row) {
                     const cells = row.querySelectorAll(':scope > td')
-                    if (cells.length && cells.length > 1) { // expand rows
+                    if (cells.length && cells.length > 1) {
+                      // expand rows
                       cells[index].style.width = `${w}px`
                       cells[index].style.minWidth = `${w}px`
                       cells[index].style.maxWidth = `${w}px`
@@ -126,6 +129,77 @@ export const useResizableColumns = (
       }
     }
     run()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, displayColumns, isLoading])
+}
+
+export const useSettingsDialog = ({
+  id,
+  pageSize,
+  resetPageSize,
+  sort,
+  resetSort,
+  columnsSettings,
+  setColumnsSettings,
+  columns,
+  listDisplay,
+  toStorage,
+  fromStorage,
+}) => {
+  const [settingsDialogIsOpen, setSettingsDialogIsOpen] = useState(false)
+  const handleOpenSettings = useCallback(() => setSettingsDialogIsOpen(true), [setSettingsDialogIsOpen])
+  const handleCloseSettings = useCallback(() => setSettingsDialogIsOpen(false), [setSettingsDialogIsOpen])
+  const handleResetSettings = useCallback(() => {
+    const data = fromStorage(id, {})
+    resetPageSize()
+    resetSort()
+    setColumnsSettings(createColumnsPropsWithStorage(columns, listDisplay, []))
+    toStorage(id, { ...data, settings: {} })
+    handleCloseSettings()
+  }, [
+    fromStorage,
+    toStorage,
+    id,
+    resetPageSize,
+    resetSort,
+    columns,
+    listDisplay,
+    handleCloseSettings,
+    setColumnsSettings,
+  ])
+  const handleSaveSettings = useCallback(() => {
+    const data = fromStorage(id, {})
+    toStorage(id, { ...data, settings: { pageSize, sort, columns: columnsSettings } })
+    handleCloseSettings()
+  }, [toStorage, fromStorage, handleCloseSettings, id, pageSize, sort, columnsSettings])
+
+  return {
+    settingsDialogIsOpen,
+    handleOpenSettings,
+    handleCloseSettings,
+    handleResetSettings,
+    handleSaveSettings,
+  }
+}
+
+export const useStorageData = ({ id, columns, listDisplay, fromStorage, setPageSize, setSort, setColumnsSettings, sessionStorageData }) => {
+  const [isIniting, setIsIniting] = useState(true)
+  const [storageData, setStorageData] = useState({})
+  useEffect(() => {
+    const getData = async () => {
+      const data = await fromStorage(id, {})
+      setStorageData(data)
+      const pageSize = getSettingPageSize(data)
+      const sort = getSettingSort(data)
+      const settingsColumns = getSettingColumns(data)
+      isNotNil(pageSize) && setPageSize(pageSize)
+      isNotNil(sort) && isNil(sessionStorageData?.sort) && setSort(sort)
+      setColumnsSettings(createColumnsPropsWithStorage(columns, listDisplay, defaultTo([], settingsColumns)))
+      setIsIniting(false)
+    }
+    getData()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, listDisplay])
+
+  return { storageData, isIniting }
 }

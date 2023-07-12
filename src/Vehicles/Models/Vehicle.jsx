@@ -20,6 +20,11 @@ export default {
       type: 'string',
     },
     {
+      id: 'brand',
+      label: 'Brand',
+      type: 'string',
+    },
+    {
       id: 'maxSpeed',
       label: 'Max Speed',
       type: 'int',

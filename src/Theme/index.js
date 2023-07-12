@@ -9,6 +9,22 @@ const getPalette = (mode) => ({
 const getTheme = (mode) => {
   const theme = createTheme({
     palette: getPalette(mode),
+    typography: {
+      fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+      fontSize: 14,
+      fontWeightLight: 300,
+      fontWeightRegular: 400,
+      fontWeightMedium: 500,
+    },
+    components: {
+      MuiTableCell: {
+        styleOverrides: {
+          sizeSmall: {
+            padding: '4px 8px'
+          }
+        }
+      },
+    },
   })
   return theme
 }

@@ -1,13 +1,21 @@
 import { defaultTo } from 'ramda'
 import { useCallback, useState } from 'react'
+
 import Config from '../../Config'
-import { fromStorage as defaultFromStorage, getSettingPageSize, getSettingSort } from '../../Storage'
+import {
+  fromStorage as defaultFromStorage,
+  fromSessionStorage as defaultFromSessionStorage,
+  getSettingPageSize,
+  getSettingSort,
+} from '../../Storage'
 
 export const useRtkQuery = (dataTableId, endpoint, qsAdditions, defaultSort, opts) => {
   const fromStorage = opts?.fromStorage || defaultFromStorage
+  const fromSessionStorage = opts?.fromSessionStorage || defaultFromSessionStorage
   const storageData = fromStorage(dataTableId, {})
+  const sessionStorageData = fromSessionStorage(dataTableId, {})
   const pageSize = defaultTo(Config.defaultPageSize, getSettingPageSize(storageData))
-  const dftSort = defaultTo(defaultSort, getSettingSort(storageData))
+  const dftSort = defaultTo(defaultTo(defaultSort, getSettingSort(storageData)), sessionStorageData?.sort)
   const getCount = opts?.getCount || ((data) => data?.count || -1)
 
   const [qs, setQs] = useState({

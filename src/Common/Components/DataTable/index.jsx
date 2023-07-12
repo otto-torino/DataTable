@@ -2,6 +2,7 @@ import PropTypes from 'prop-types'
 
 import AdapterProvider from './AdapterProvider'
 import MuiAdapter from './Adapters/Mui/MuiAdapter'
+import CommonPropTypes from './CommonPropTypes'
 import DataTableClient from './Variants/Client/DataTableClient'
 import DataTableRtk from './Variants/Rtk/DataTableRtk'
 
@@ -22,9 +23,11 @@ DataTable.defaultProps = {
   adapter: 'mui',
 }
 
+
 DataTable.propTypes = {
   variant: PropTypes.oneOf(['client', 'rtk']),
   adapter: PropTypes.oneOf(['mui']),
+  ...CommonPropTypes,
 }
 
 export default DataTable

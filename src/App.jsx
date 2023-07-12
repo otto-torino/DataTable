@@ -11,6 +11,7 @@ import getTheme from '@Theme'
 import Vehicle from '@Vehicles/Models/Vehicle'
 import Campaign from './Campaigns/Model/Campaign'
 import { defaultTo } from 'ramda'
+import { apiQueryString } from './Core/Services/Api'
 
 function App() {
   const mode = 'light'
@@ -20,7 +21,7 @@ function App() {
   const [isVisible, setIsVisible] = useState(true)
 
   const qsAdditions = {}
-  const { qs, data, isFetching, refetch, refreshData, count } = useRtkQuery(
+  const { data, isFetching, refetch, refreshData, count } = useRtkQuery(
     'campaigns', // dataTableId
     useCampaignsQuery, // rtk endpoint
     qsAdditions, // qs additions
@@ -72,6 +73,7 @@ function App() {
             isFilterFormActive={false}
             fullTextSearchFields={['name']}
             isLoading={isFetching}
+            exportApi={(qs) => fetch(`https://www.tazebao.email/api/v1/newsletter/campaign/${apiQueryString(qs)}`)}
           />
         )}
       </div>
@@ -92,7 +94,7 @@ function App() {
             isFilterFormActive={false}
             actions={actions}
             onAction={handleAction}
-            fullTextSearchFields={['name', 'status']}
+            fullTextSearchFields={['name', 'status.code']}
             onExpandRow_={() => <div style={{ height: '100px', background: 'red' }}>Hello</div>}
             onExpandRowCondition={({ id }) => id % 2 === 0}
           />

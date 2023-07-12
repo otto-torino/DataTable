@@ -8,6 +8,9 @@ export const fromStorage = (key, defaultValue = null) => {
   let val = null
   try {
     val = JSON.parse(localStorage.getItem(`${app}_${key}`))
+    // return new Promise((resolve) => { // simulate async
+    //   setTimeout(() => resolve(val), 500)
+    // })
   } catch (e) {
     console.warn('Get from local storage error: ', e)
   }

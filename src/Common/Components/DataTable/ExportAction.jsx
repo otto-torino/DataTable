@@ -8,10 +8,10 @@ import { DataTableContext } from './DataTableProvider'
 import Loader from './Loader'
 import { getCsvValue, withEventValue } from './Utils'
 
-const ExportAction = ({ exportApi, qs }) => {
+const ExportAction = () => {
   const { Dialog, DialogContent, IconButton, TextField, Alert, DialogActions, Button, Tooltip, Save } =
     useContext(AdapterContext)
-  const { t, displayColumns, sortedData, renderContext, id } = useContext(DataTableContext)
+  const { t, displayColumns, sortedData, renderContext, id, exportApi, sort, qsAdditions } = useContext(DataTableContext)
   const [fileName, setFileName] = React.useState(`${new Date().toDateString().replace(/ /g, '-')}-${id}.csv`)
   const [isOpen, setIsOpen] = useState(false)
   const [csvData, setCsvData] = useState(null)
@@ -28,9 +28,13 @@ const ExportAction = ({ exportApi, qs }) => {
         let data
         if (exportApi) {
           const res = await exportApi({
-            ...qs.base,
-            ...qs.qsAdditions,
-            top: 10000,
+            ...{
+              page: 0,
+              pageSize: 10000,
+              orderBy: sort.field,
+              orderType: sort.direction,
+            },
+            ...qsAdditions,
           })
           data = defaultTo([], res.data?.value)
         } else {
