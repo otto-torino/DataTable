@@ -1,6 +1,6 @@
 import { Delete, Edit, MoveUp } from '@mui/icons-material'
 import { ThemeProvider } from '@mui/material'
-import { useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 
 import DataTable from '@Common/Components/DataTable'
 import { BULK_ACTION_TYPE, RECORD_ACTION_TYPE } from '@Common/Components/DataTable/Constants'
@@ -12,6 +12,9 @@ import Vehicle from '@Vehicles/Models/Vehicle'
 import Campaign from './Campaigns/Model/Campaign'
 import { defaultTo } from 'ramda'
 import { apiQueryString } from './Core/Services/Api'
+
+const LIST_DISPLAY = ['id', 'name', 'maxSpeed']
+const SEARCH_FIELDS = ['name', 'status.code']
 
 function App() {
   const mode = 'light'
@@ -48,35 +51,44 @@ function App() {
     },
   ]
 
-  const handleAction = (actionId, record) => {
+  const handleAction = useCallback((actionId, record) => {
     console.log(actionId, record)
-  }
+  }, [])
+  const onFilter = useCallback(() => {
+    console.log('FILTER')
+  }, [])
+  const onExpandRow = useCallback(() => {
+    return (
+      <div style={{ height: '100px', background: 'red' }}>Hello</div>
+    )
+  }, [])
+  const onExpandRowCondition = useCallback(({ id }) => id % 2 === 0, [])
 
   return (
     <ThemeProvider theme={theme}>
-      <div>
-        {isVisible && (
-          <DataTable
-            variant="rtk"
-            selectable
-            id="campaigns"
-            data={defaultTo([], data?.results)}
-            count={count}
-            qsAdditions={qsAdditions}
-            refreshData={refreshData}
-            model={Campaign}
-            selected={selectedRtk}
-            onSelect={setSelectedRtk}
-            onRefetch={refetch}
-            listDisplay={['id', 'name']}
-            onFilter={() => {}}
-            isFilterFormActive={false}
-            fullTextSearchFields={['name']}
-            isLoading={isFetching}
-            exportApi={(qs) => fetch(`https://www.tazebao.email/api/v1/newsletter/campaign/${apiQueryString(qs)}`)}
-          />
-        )}
-      </div>
+      {/* <div> */}
+      {/*   {isVisible && ( */}
+      {/*     <DataTable */}
+      {/*       variant="rtk" */}
+      {/*       selectable */}
+      {/*       id="campaigns" */}
+      {/*       data={defaultTo([], data?.results)} */}
+      {/*       count={count} */}
+      {/*       qsAdditions={qsAdditions} */}
+      {/*       refreshData={refreshData} */}
+      {/*       model={Campaign} */}
+      {/*       selected={selectedRtk} */}
+      {/*       onSelect={setSelectedRtk} */}
+      {/*       onRefetch={refetch} */}
+      {/*       listDisplay={['id', 'name']} */}
+      {/*       onFilter={() => {}} */}
+      {/*       isFilterFormActive={false} */}
+      {/*       fullTextSearchFields={['name']} */}
+      {/*       isLoading={isFetching} */}
+      {/*       exportApi={(qs) => fetch(`https://www.tazebao.email/api/v1/newsletter/campaign/${apiQueryString(qs)}`)} */}
+      {/*     /> */}
+      {/*   )} */}
+      {/* </div> */}
       <div>
         {isVisible && (
           <DataTable
@@ -87,16 +99,15 @@ function App() {
             model={Vehicle}
             selected={selected}
             onSelect={setSelected}
-            onRefetch={() => {}}
             storePageAndSortInSession
-            listDisplay={['id', 'name', 'maxSpeed']}
-            onFilter={() => {}}
+            listDisplay={LIST_DISPLAY}
+            onFilter={onFilter}
             isFilterFormActive={false}
             actions={actions}
             onAction={handleAction}
-            fullTextSearchFields={['name', 'status.code']}
-            onExpandRow_={() => <div style={{ height: '100px', background: 'red' }}>Hello</div>}
-            onExpandRowCondition={({ id }) => id % 2 === 0}
+            fullTextSearchFields={SEARCH_FIELDS}
+            onExpandRow={onExpandRow}
+            onExpandRowCondition={onExpandRowCondition}
           />
         )}
       </div>
