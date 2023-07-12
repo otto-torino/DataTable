@@ -70,6 +70,7 @@ const DataTableClient = memo((props) => {
   const columns = useMemo(() => model.fields, [model.fields])
 
   // storage data (support async initing)
+  // this storageData does not update, its value is the one when the component is mounted
   const { isIniting, storageData } = useStorageData({
     id,
     columns,
@@ -95,7 +96,6 @@ const DataTableClient = memo((props) => {
       listDisplay,
       fromStorage,
       toStorage,
-      storageData,
     })
 
   // prepare columns

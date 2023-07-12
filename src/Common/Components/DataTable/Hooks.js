@@ -193,7 +193,7 @@ export const useStorageData = ({ id, columns, listDisplay, fromStorage, setPageS
       const sort = getSettingSort(data)
       const settingsColumns = getSettingColumns(data)
       isNotNil(pageSize) && setPageSize(pageSize)
-      isNotNil(sort) && isNil(sessionStorageData?.sort) && setSort(sort)
+      isNotNil(sort) && isNil(sessionStorageData?.sort) && setSort(sort) // session saved sort has priority
       setColumnsSettings(createColumnsPropsWithStorage(columns, listDisplay, defaultTo([], settingsColumns)))
       setIsIniting(false)
     }
