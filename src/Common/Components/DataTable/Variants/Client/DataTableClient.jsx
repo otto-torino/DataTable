@@ -1,3 +1,4 @@
+import { NorthEast } from '@mui/icons-material'
 import PropTypes from 'prop-types'
 import { assoc, compose, isEmpty, isNil, isNotNil, not, or, pick, propEq, T } from 'ramda'
 import React, { memo, useCallback, useContext, useEffect, useMemo, useState } from 'react'
@@ -5,10 +6,11 @@ import React, { memo, useCallback, useContext, useEffect, useMemo, useState } fr
 import ActionsButton from '../../ActionsButton'
 import { AdapterContext } from '../../AdapterProvider'
 import BulkActionsFullTextSearchBar from '../../BulkActionsFullTextSearchBar'
+import Config from '../../Config'
 import { BULK_ACTION_TYPE, RECORD_ACTION_TYPE } from '../../Constants'
 import DataTableProvider from '../../DataTableProvider'
-import { usePagination, useSorting } from './Hooks'
 import { useResizableColumns, useSelection } from '../../Hooks'
+import Loader from '../../Loader'
 import SettingsDialog from '../../SettingsDialog'
 import {
   fromStorage as defaultFromStorage,
@@ -30,8 +32,7 @@ import {
   getRecordActions,
   getValue,
 } from '../../Utils'
-import Config from '../../Config'
-import { NorthEast } from '@mui/icons-material'
+import { usePagination, useSorting } from './Hooks'
 
 const DataTableClient = memo((props) => {
   const {
@@ -310,9 +311,7 @@ const DataTableClient = memo((props) => {
                         </Box>
                       </TableCell>
                     )}
-                    {(recordActions.length == 0 && !onExpandRow && !noColumnsResizing) && (
-                      <TableCell />
-                    )}
+                    {recordActions.length == 0 && !onExpandRow && !noColumnsResizing && <TableCell />}
                   </TableRow>
                   {onExpandRow && (
                     <TableRow key={`expanded-${pk}`}>
@@ -328,6 +327,7 @@ const DataTableClient = memo((props) => {
             })}
           </TableBody>
         </Table>
+        {!displayData.length && isLoading && <Loader minHeight="100px" skeleton={pageSize} />}
       </TableContainer>
       <TablePagination />
       {settingsDialogIsOpen && <SettingsDialog />}

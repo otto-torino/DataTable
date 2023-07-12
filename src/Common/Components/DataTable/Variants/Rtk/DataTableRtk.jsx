@@ -5,10 +5,11 @@ import React, { memo, useCallback, useContext, useEffect, useMemo, useRef, useSt
 import ActionsButton from '../../ActionsButton'
 import { AdapterContext } from '../../AdapterProvider'
 import BulkActionsFullTextSearchBar from '../../BulkActionsFullTextSearchBar'
+import Config from '../../Config'
 import { BULK_ACTION_TYPE, RECORD_ACTION_TYPE } from '../../Constants'
 import DataTableProvider from '../../DataTableProvider'
-import { usePagination, useSorting } from './Hooks'
-import { useResizableColumns, useSelection } from '../../Hooks'
+import { useDebounce, useResizableColumns, useSelection } from '../../Hooks'
+import Loader from '../../Loader'
 import SettingsDialog from '../../SettingsDialog'
 import {
   fromStorage as defaultFromStorage,
@@ -22,14 +23,8 @@ import {
 } from '../../Storage'
 import TablePagination from '../../TablePagination'
 import Toolbar from '../../Toolbar'
-import {
-  createColumnsPropsWithStorage,
-  defaultT,
-  getPrimaryKey,
-  getRecordActions,
-  getValue,
-} from '../../Utils'
-import Config from '../../Config'
+import { createColumnsPropsWithStorage, defaultT, getPrimaryKey, getRecordActions, getValue } from '../../Utils'
+import { usePagination, useSorting } from './Hooks'
 
 const DataTableRtk = memo((props) => {
   const {
@@ -55,7 +50,6 @@ const DataTableRtk = memo((props) => {
     listDisplay,
     actions,
     onAction,
-    fullTextSearchFields,
     onExpandRow,
     onExpandRowCondition,
     noColumnsResizing,
@@ -107,6 +101,7 @@ const DataTableRtk = memo((props) => {
 
   // full text search
   const [fullTextSearch, setFullTextSearch] = useState('')
+  const debouncedFullTextSearch = useDebounce(fullTextSearch)
 
   // row expanding
   const [expandedRow, setExpandedRow] = useState(null)
@@ -166,14 +161,11 @@ const DataTableRtk = memo((props) => {
   // reset page when changing filtering
   const prevQsAdditions = useRef(JSON.stringify(qsAdditions))
   useEffect(() => {
-    if (
-      prevQsAdditions.current &&
-      prevQsAdditions.current !== JSON.stringify(qsAdditions)
-    ) {
+    if (prevQsAdditions.current && prevQsAdditions.current !== JSON.stringify(qsAdditions)) {
       setPage(0)
     }
     prevQsAdditions.current = JSON.stringify(qsAdditions)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(qsAdditions)])
 
   // data refreshing
@@ -185,14 +177,14 @@ const DataTableRtk = memo((props) => {
         orderBy: sort.field,
         orderType: sort.direction,
       },
-      qsAdditions: { ...qsAdditions },
+      qsAdditions: { ...qsAdditions, ...(debouncedFullTextSearch ? { search: debouncedFullTextSearch } : {}) },
     })
 
     if (onExpandRow) {
       setExpandedRow(null)
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [JSON.stringify(qsAdditions), page, sort, pageSize, refreshData, onExpandRow])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [JSON.stringify(qsAdditions), page, sort, pageSize, refreshData, onExpandRow, debouncedFullTextSearch])
 
   // selection
   const {
@@ -334,9 +326,7 @@ const DataTableRtk = memo((props) => {
                         </Box>
                       </TableCell>
                     )}
-                    {(recordActions.length == 0 && !onExpandRow && !noColumnsResizing) && (
-                      <TableCell />
-                    )}
+                    {recordActions.length == 0 && !onExpandRow && !noColumnsResizing && <TableCell />}
                   </TableRow>
                   {onExpandRow && (
                     <TableRow key={`expanded-${pk}`}>
@@ -352,6 +342,7 @@ const DataTableRtk = memo((props) => {
             })}
           </TableBody>
         </Table>
+        {!displayData.length && isLoading && <Loader minHeight="100px" skeleton={pageSize} />}
       </TableContainer>
       <TablePagination />
       {settingsDialogIsOpen && <SettingsDialog />}

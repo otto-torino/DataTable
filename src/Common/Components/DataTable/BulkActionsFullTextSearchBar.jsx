@@ -60,7 +60,7 @@ const BulkActionsFullTextSearchBar = () => {
         </Box>
       )}
       {fullTextSearchFields.length > 0 && (
-        <Box direction="row" gap=".5rem">
+        <Box direction="row" gap=".5rem" margin="0 0 0 auto">
           <TextField
             label={t('common:dataTable.Filter')}
             value={fullTextSearch}

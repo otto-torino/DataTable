@@ -4,4 +4,5 @@ export default {
   defaultSortDirection: 'asc',
   defaultDateTimeFormat: 'YYYY-MM-DD HH:mm:ss',
   defaultDateFormat: 'YYYY-MM-DD',
+  debounceTime: 500,
 }

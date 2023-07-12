@@ -26,7 +26,6 @@ function App() {
     qsAdditions, // qs additions
     { field: 'id', direction: 'asc' }, // default sorting
   )
-  console.log('DATA', data) // eslint-disable-line
 
   const actions = [
     {
@@ -67,11 +66,12 @@ function App() {
             model={Campaign}
             selected={selectedRtk}
             onSelect={setSelectedRtk}
-            onRefetch={() => {}}
+            onRefetch={refetch}
             listDisplay={['id', 'name']}
             onFilter={() => {}}
             isFilterFormActive={false}
             fullTextSearchFields={['name']}
+            isLoading={isFetching}
           />
         )}
       </div>

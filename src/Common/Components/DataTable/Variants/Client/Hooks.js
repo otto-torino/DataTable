@@ -65,7 +65,6 @@ export const useSorting = (
 
   const getSortingValue = (record, field) => {
     const modelField = getFieldById(model, field)
-    console.log('MODEL VALUE', model, modelField) // eslint-disable-line
     if (modelField.sortingValue) {
       return modelField.sortingValue(record)
     }

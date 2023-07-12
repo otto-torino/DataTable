@@ -1,9 +1,25 @@
 import { compose, defaultTo, differenceWith, equals, not, uniqBy } from 'ramda'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import Config from './Config'
 import { getResizing } from './Storage'
 
 import { createResizableColumn, getPrimaryKey } from './Utils'
 
+export const useDebounce = (value, delay = Config.debounceTime) => {
+  const [debouncedValue, setDebouncedValue] = useState(value)
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value)
+    }, delay)
+
+    return () => {
+      clearTimeout(handler)
+    }
+  }, [value, delay])
+
+  return debouncedValue
+}
 
 export const useSelection = (selected, onSelect, model) => {
   const handleSelectRecord = (record) => (event) => {
