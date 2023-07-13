@@ -91,7 +91,6 @@ export const applyFullTextSearchFilter = (model, fullTextSearchFields, fullTextS
   })
 }
 
-
 // events related utils
 export const withEventValue = (fn, isCheckbox) => e => fn(isCheckbox ? e.target.checked : e.target.value)
 
