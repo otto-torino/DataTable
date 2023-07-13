@@ -133,11 +133,12 @@ Example:
 
 ``` jsx
 // import MuiAdapterContext from 'DataTable/Adapters/Mui/MuiAdapterContext'
+// import DefaultDataTableContext from 'DataTable/DefaultDataTableContext'
 // import styled from 'styled-components'
 
 const NewTableRow = styled.tr`background: #eee;`
 
-<DataTableProvider context={{ ...MuiAdapterContext, TableRow: NewTableRow, t: (stringId) => stringId }}>
+<DataTableProvider context={{ ...MuiAdapterContext, TableRow: NewTableRow, ...DefaultDataTableContext, t: (stringId) => stringId }}>
   <DataTable .../>
 </DataTableProvider>
 ```
