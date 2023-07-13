@@ -33,6 +33,9 @@ If using the MUI adapter:
   ``` jsx
   import MuiAdapterContext from 'DataTable/Adapters/Mui/MuiAdapterContext.js'
   import { useTranslation } from 'react-18next'
+  import DefaultDataTableContext from './DataTable/DefaultDataTableContext'
+  import DataTable from 'DataTable'
+  import DataProvider from 'DataTableProvider'
 
   const MyComponent = () => {
     // translation function
@@ -51,7 +54,7 @@ If using the MUI adapter:
     const SEARCH_FIELDS = useMemo(() => ['id', 'name'], [])
 
     return (
-      <DataTableProvider context={{ ...MuiAdapterContext, t }}>
+      <DataTableProvider context={{ ...MuiAdapterContext, ...DefaultDataTableContext, t }}>
         <DataTable
           variant="client"
           selectable
@@ -100,11 +103,7 @@ If using the MUI adapter:
 |renderContext|object|false|{}|A context passed to the model render function, used to customize field value|
 |noToolbar|bool|false|false|Hide the toolbar (selection info and buttons)|
 |noSettings|bool|false|false|Hide the settings icon|
-|fromStorage|function|false|localStorage reading function|Function used to retrieve data from storage, can be async. Storage is used to save table settings and columns resizing data.|
-|toStorage|function|false|localStorage writing function|Function used to store data to storage, can be async|
 |storePageAndSortInSession|bool|false|true|Whether to save current page and sorting field and direction in a session storage|
-|fromSessionStorage|function|false|sessionStorage reading function|Function used to retrieve data from the session storage, should be sync. Session storage is used to save current page and sorting info.|
-|toSessionStorage|function|false|sessionStorage writing function|Function used to store data to the session storage, should be sync|
 |listDisplay|array|true||A list of fields that should be displayed by default (actually displayed fields may vary, depending on user stored settings)|
 |noExport|bool|false|false|Hide the export to csv functionality|
 |onFilter|function|false||Function which receives a cose handler and should return a modal filtering form|
@@ -125,6 +124,30 @@ If using the MUI adapter:
 |qsAdditions|object|false|{}|Querystring parameters other than pagination and sorting stuff|
 |refreshData|function|true||Function used to trigger a data refresh, it receives the new query string in the form `{ base: { page, pageSize, orderBy, orderType}, qsAdditions }`|
 |count|int|false|-1|The total number of table data, -1 means that total number is unknown|
+
+## Context, Adapters & Customization
+
+DataTable uses many UI components. It comes with a MUI adapter. You can write your own adapters, or override the default one in some parts, but make sure to export all the components exported in `Adapters/Mui/MuiAdapterContext`.
+
+Example:
+
+``` jsx
+// import MuiAdapterContext from 'DataTable/Adapters/Mui/MuiAdapterContext'
+// import styled from 'styled-components'
+
+const NewTableRow = styled.tr`background: #eee;`
+
+<DataTableProvider context={{ ...MuiAdapterContext, TableRow: NewTableRow, t: (stringId) => stringId }}>
+  <DataTable .../>
+</DataTableProvider>
+```
+
+Also DataTable uses a translation function for strings, it has a simple default one, but you can use your preferred one (i.e. react-i18next), just pass it to the DataTableProvider context.
+
+In the same way, you can inject your custom storage functions. Datatable uses two different storages:
+- one is used to store table settings and column widhts. It's managed through two functions: `fromStorage` and `toStorage`. Both can be async. By default two functions are provided which use the browser localStorage.
+- the other is used to store current page and sorting info. It's managed through two functions: `fromSessionStorage` and `toSessionStorage`. Both must be sync. By default two functions are provided which use the sessionStorage.
+
 
 ## RTK utils
 
@@ -209,24 +232,6 @@ The `onAction` callback receives the following argument:
   records, // if bulk action, the list of records
 }
 ```
-
-## Adapters & Customization
-
-DataTable uses many UI components. It comes with a MUI adapter. You can write your own adapters, or override the default one in some parts, but make sure to export all the components exported in `Adapters/Mui/MuiAdapterContext`.
-
-Example:
-
-``` jsx
-// import MuiAdapterContext from 'DataTable/Adapters/Mui/MuiAdapterContext'
-// import styled from 'styled-components'
-
-const NewTableRow = styled.tr`background: #eee;`
-
-<DataTableProvider context={{ ...MuiAdapterContext, TableRow: NewTableRow, t: (stringId) => stringId }}>
-	<DataTable .../>
-</DataTableProvider>
-```
-
 ## Development
 
 ```

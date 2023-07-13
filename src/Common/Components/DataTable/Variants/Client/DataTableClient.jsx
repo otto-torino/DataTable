@@ -1,11 +1,12 @@
 import { propEq } from 'ramda'
-import { memo, useMemo, useState } from 'react'
+import { memo, useContext, useMemo, useState } from 'react'
 
 import CommonDefaultProps from '../../CommonDefaultProps'
 import CommonPropTypes from '../../CommonPropTypes'
 import Config from '../../Config'
 import DataTableBase from '../../DataTableBase'
 import DataTableInternalProvider from '../../DataTableInternalProvider'
+import { DataTableContext } from '../../DataTableProvider'
 import { useResizableColumns, useSelection, useSettingsDialog, useStorageData } from '../../Hooks'
 import { getResizing } from '../../Storage'
 import { applyFullTextSearchFilter, getRecordActions } from '../../Utils'
@@ -23,17 +24,16 @@ const DataTableClient = memo((props) => {
     defaultPageSize,
     defaultSortField,
     defaultSortDirection,
-    fromStorage,
-    toStorage,
     storePageAndSortInSession,
-    fromSessionStorage,
-    toSessionStorage,
     listDisplay,
     actions,
     fullTextSearchFields,
     onExpandRow,
     noColumnsResizing,
   } = props
+
+  // storage
+  const { fromStorage, toStorage, fromSessionStorage, toSessionStorage } = useContext(DataTableContext)
 
   // session storage data
   const sessionStorageData = fromSessionStorage(id, {})

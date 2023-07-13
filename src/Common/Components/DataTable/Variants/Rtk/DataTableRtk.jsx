@@ -1,12 +1,13 @@
 import PropTypes from 'prop-types'
 import { propEq } from 'ramda'
-import { memo, useEffect, useMemo, useRef, useState } from 'react'
+import { memo, useContext, useEffect, useMemo, useRef, useState } from 'react'
 
 import CommonDefaultProps from '../../CommonDefaultProps'
 import CommonPropTypes from '../../CommonPropTypes'
 import Config from '../../Config'
 import DataTableBase from '../../DataTableBase'
 import DataTableInternalProvider from '../../DataTableInternalProvider'
+import { DataTableContext } from '../../DataTableProvider'
 import { useDebounce, useResizableColumns, useSelection, useSettingsDialog, useStorageData } from '../../Hooks'
 import {
   getResizing,
@@ -26,11 +27,7 @@ const DataTableRtk = memo((props) => {
     defaultPageSize,
     defaultSortField,
     defaultSortDirection,
-    fromStorage,
-    toStorage,
     storePageAndSortInSession,
-    fromSessionStorage,
-    toSessionStorage,
     listDisplay,
     actions,
     onExpandRow,
@@ -39,6 +36,9 @@ const DataTableRtk = memo((props) => {
     refreshData,
     count,
   } = props
+
+  // storage
+  const { fromStorage, toStorage, fromSessionStorage, toSessionStorage } = useContext(DataTableContext)
 
   // session storage data
   const sessionStorageData = fromSessionStorage(id, {})

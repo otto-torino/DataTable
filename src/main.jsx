@@ -12,7 +12,7 @@ import DataTableProvider from '@Common/Components/DataTable/DataTableProvider.js
 
 import App from './App.jsx'
 import store from './Core/Redux/Store'
-import { defaultT } from '@Common/Components/DataTable/Utils.js'
+import DefaultDataTableContext from '@Common/Components/DataTable/DefaultDataTableContext.js'
 
 const isValidProp = (prop) => {
   return isPropValid(prop) || prop === 'active' || prop === 'fullWidth'
@@ -21,7 +21,7 @@ const isValidProp = (prop) => {
 ReactDOM.createRoot(document.getElementById('root')).render(
   <StyleSheetManager shouldForwardProp={isValidProp} disableVendorPrefixes={false}>
     <Provider store={store}>
-      <DataTableProvider context={{ ...MuiAdapterContext, t: defaultT }}>
+      <DataTableProvider context={{ ...MuiAdapterContext, ...DefaultDataTableContext }}>
         <App />
       </DataTableProvider>
     </Provider>

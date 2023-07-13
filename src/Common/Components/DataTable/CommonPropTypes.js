@@ -55,16 +55,8 @@ export default {
   noToolbar: PropTypes.bool,
   // disable settings dialog
   noSettings: PropTypes.bool,
-  // retrieve from storage
-  fromStorage: PropTypes.func,
-  // save to storage
-  toStorage: PropTypes.func,
   // store page and sort in session
   storePageAndSortInSession: PropTypes.bool,
-  // retrieve from session storage (save current page and sorting in session)
-  fromSessionStorage: PropTypes.func,
-  // save to session storage
-  toSessionStorage: PropTypes.func,
   // columns which should be visible
   listDisplay: PropTypes.arrayOf(PropTypes.string).isRequired,
   // disable export
