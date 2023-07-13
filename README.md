@@ -91,6 +91,7 @@ If using the MUI adapter:
 |onSelect|function|false||The function called when the selected rows change, receives the new selected rows as argument|
 |noBulkSelection|bool|false|false|Disable bulk selection (page and all rows)|
 |noAllSelection|bool|false|false|Disable all rows selection|
+|selectOnRowClick|bool|false|false|If true the record can be selected clicking everywhere in the row|
 |model|object|true||The model represented by the table (see below sections)|
 |data|array|true||The table data|
 |onRefetch|function|false||A function which activate the refetch button and it's called when clicking it|

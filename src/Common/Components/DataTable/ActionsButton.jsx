@@ -26,6 +26,7 @@ const ActionsButton = ({ actions, onAction }) => {
           <MenuItem
             key={action.id}
             onClick={(evt) => {
+              evt.stopPropagation()
               handleClose()
               onAction(action, evt)
             }}

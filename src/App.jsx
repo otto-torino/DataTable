@@ -99,6 +99,7 @@ function App() {
             model={Vehicle}
             selected={selected}
             onSelect={setSelected}
+            selectOnRowClick
             storePageAndSortInSession
             listDisplay={LIST_DISPLAY}
             onFilter={onFilter}

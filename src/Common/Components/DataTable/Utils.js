@@ -93,6 +93,10 @@ export const applyFullTextSearchFilter = (model, fullTextSearchFields, fullTextS
 
 // events related utils
 export const withEventValue = (fn, isCheckbox) => e => fn(isCheckbox ? e.target.checked : e.target.value)
+export const withStopPropagation = (fn, ...args) => (e) => {
+  e.stopPropagation()
+  fn(...args)
+}
 
 // i18n related utils
 export const defaultT = stringId => stringId.replace('common:dataTable.', '').split(/(?=[A-Z])/).join(' ')

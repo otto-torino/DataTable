@@ -19,6 +19,8 @@ export default {
   noBulkSelection: PropTypes.bool,
   // disable all records selection
   noAllSelection: PropTypes.bool,
+  // select record on row click
+  selectOnRowClick: PropTypes.bool,
   // recors model
   model: PropTypes.object.isRequired,
   // data set
