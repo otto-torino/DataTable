@@ -1,5 +1,6 @@
 import { always, compose, equals, ifElse, isNil, max, not, path, pipe, prop, propEq } from 'ramda'
 import { useContext } from 'react'
+import { CURSOR_MOVE_STYLE } from './Constants'
 import { DataTableInternalContext } from './DataTableInternalProvider'
 
 import { DataTableContext } from './DataTableProvider'
@@ -149,7 +150,7 @@ const SettingsDialog = () => {
                     />
                     <span>{column.label}</span>
                   </div>
-                  <DragHandle sx={{ cursor: 'move' }} />
+                  <DragHandle sx={CURSOR_MOVE_STYLE} />
                 </DraggableRow>
               </Draggable>
             )

@@ -91,6 +91,7 @@ If using the MUI adapter:
 |onSelect|function|false||The function called when the selected rows change, receives the new selected rows as argument|
 |noBulkSelection|bool|false|false|Disable bulk selection (page and all rows)|
 |noAllSelection|bool|false|false|Disable all rows selection|
+|selectOnRowClick|bool|false|true|If true the record can be selected clicking everywhere in the row|
 |model|object|true||The model represented by the table (see below sections)|
 |data|array|true||The table data|
 |onRefetch|function|false||A function which activate the refetch button and it's called when clicking it|
@@ -149,6 +150,9 @@ In the same way, you can inject your custom storage functions. Datatable uses tw
 - one is used to store table settings and column widhts. It's managed through two functions: `fromStorage` and `toStorage`. Both can be async. By default two functions are provided which use the browser localStorage.
 - the other is used to store current page and sorting info. It's managed through two functions: `fromSessionStorage` and `toSessionStorage`. Both must be sync. By default two functions are provided which use the sessionStorage.
 
+## Config
+
+Some functionality can be configured changing the `Config` values.
 
 ## RTK utils
 

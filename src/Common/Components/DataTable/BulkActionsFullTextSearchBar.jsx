@@ -1,5 +1,6 @@
 import { toLower } from 'ramda'
 import { useContext, useState } from 'react'
+import { CURSOR_POINTER_STYLE } from './Constants'
 
 import { DataTableInternalContext } from './DataTableInternalProvider'
 import { DataTableContext } from './DataTableProvider'
@@ -71,7 +72,7 @@ const BulkActionsFullTextSearchBar = () => {
               endAdornment: (
                 <Tooltip title={t('common:dataTable.FilterBy') + ' ' + fullTextSearchFields.map(toLower).join(', ')}>
                   <InputAdornment position="end">
-                    <Help color="info" style={{ cursor: 'help' }} />
+                    <Help color="info" style={CURSOR_POINTER_STYLE} />
                   </InputAdornment>
                 </Tooltip>
               ),

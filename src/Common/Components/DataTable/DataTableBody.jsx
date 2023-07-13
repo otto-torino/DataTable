@@ -1,13 +1,15 @@
-import { assoc, compose, pick } from "ramda"
-import React from "react"
-import { useContext } from "react"
-import ActionsButton from "./ActionsButton"
-import { DataTableInternalContext } from "./DataTableInternalProvider"
-import { DataTableContext } from "./DataTableProvider"
-import { getPrimaryKey, getValue } from "./Utils"
+import { assoc, compose, pick } from 'ramda'
+import React from 'react'
+import { useContext } from 'react'
+
+import ActionsButton from './ActionsButton'
+import { DataTableInternalContext } from './DataTableInternalProvider'
+import { DataTableContext } from './DataTableProvider'
+import { getPrimaryKey, getValue, withStopPropagation } from './Utils'
 
 const DataTableBody = () => {
-  const { TableBody, TableRow, TableCell, Checkbox, Box, IconButton, KeyboardArrowUp, KeyboardArrowDown, Collapse } = useContext(DataTableContext)
+  const { TableBody, TableRow, TableCell, Checkbox, Box, IconButton, KeyboardArrowUp, KeyboardArrowDown, Collapse } =
+    useContext(DataTableContext)
   const {
     selectable,
     isRecordSelected,
@@ -26,21 +28,28 @@ const DataTableBody = () => {
     size,
     onAction,
     colSpan,
+    selectOnRowClick,
   } = useContext(DataTableInternalContext)
   return (
     <TableBody>
       {displayData.map((record) => {
         const enableSelection = selectable === true || (typeof selectable === 'function' && selectable(record))
         const pk = getPrimaryKey(model, record)
+        const isSelected = isRecordSelected(pk)
         const allowedActions = recordActions.filter(
           (a) => (!a.permission || a.permission(record)) && (!a.condition || a.condition(record)),
         )
         return (
           <React.Fragment key={pk}>
-            <TableRow key={pk}>
+            <TableRow
+              key={pk}
+              onClick={
+                selectOnRowClick ? () => handleSelectRecord(record)({ target: { checked: !isSelected } }) : undefined
+              }
+            >
               {enableSelection && (
                 <TableCell padding="checkbox" checkbox>
-                  <Checkbox checked={isRecordSelected(pk)} onChange={handleSelectRecord(record)} />
+                  <Checkbox checked={isSelected} onChange={handleSelectRecord(record)} />
                 </TableCell>
               )}
               {displayColumns.map((column, idx) => {
@@ -54,7 +63,7 @@ const DataTableBody = () => {
                 <TableCell stickyRight={!noSticky}>
                   <Box direction="row" gap=".5rem" justify="flex-end">
                     {onExpandRow && onExpandRowCondition(record) && (
-                      <IconButton size={size} onClick={() => setExpandedRow(expandedRow === pk ? null : pk)}>
+                      <IconButton size={size} onClick={withStopPropagation(setExpandedRow, expandedRow === pk ? null : pk)}>
                         {expandedRow === pk ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
                       </IconButton>
                     )}

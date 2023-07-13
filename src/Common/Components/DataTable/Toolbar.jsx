@@ -1,4 +1,5 @@
 import { useContext, useState } from 'react'
+import { CURSOR_POINTER_STYLE } from './Constants'
 
 import { DataTableInternalContext } from './DataTableInternalProvider'
 import { DataTableContext } from './DataTableProvider'
@@ -86,7 +87,7 @@ const Toolbar = () => {
         {onFilter && (
           <Tooltip title={t('common:dataTable.Filter')}>
             <IconButton size="small" onClick={handleOpenFilterForm}>
-              <FilterIcon style={{ cursor: 'pointer' }} color={isFilterFormActive ? 'secondary' : 'primary'} />
+              <FilterIcon style={CURSOR_POINTER_STYLE} color={isFilterFormActive ? 'secondary' : 'primary'} />
             </IconButton>
           </Tooltip>
         )}
