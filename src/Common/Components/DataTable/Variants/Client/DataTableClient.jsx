@@ -189,4 +189,6 @@ DataTableClient.propTypes = {
   ...CommonPropTypes,
 }
 
+DataTableClient.whyDidYouRender = true
+
 export default DataTableClient

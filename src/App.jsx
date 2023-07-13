@@ -20,6 +20,7 @@ const SEARCH_FIELDS = ['name', 'status.code']
 function App() {
   const mode = 'light'
   const theme = useMemo(() => getTheme(mode), [mode])
+  const [counter, setCounter] = useState(0)
   const [selected, setSelected] = useState([])
   const [selectedRtk, setSelectedRtk] = useState([])
   const [isVisible, setIsVisible] = useState(true)
@@ -111,6 +112,7 @@ function App() {
         )}
       </div>
       <button onClick={() => setIsVisible(!isVisible)}>Switch</button>
+      <button onClick={() => setCounter(counter + 1)}>{counter}</button>
     </ThemeProvider>
   )
 }
