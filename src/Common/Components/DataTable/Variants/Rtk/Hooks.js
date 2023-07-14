@@ -20,7 +20,7 @@ export const useRtkQuery = (dataTableId, endpoint, qsAdditions, defaultSort, opt
 
   const [qs, setQs] = useState({
     base: {
-      page: 0,
+      page: defaultTo(0, sessionStorageData?.page),
       pageSize,
       orderBy: dftSort.field,
       orderType: dftSort.direction,
