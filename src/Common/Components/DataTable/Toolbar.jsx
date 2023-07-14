@@ -54,8 +54,7 @@ const Toolbar = () => {
         <Box direction="row" align="center" gap="0">
           <ToolbarSelection direction="row" align="center" gap=".3rem">
             <Chip
-              size="small"
-              label={`${selected.length} ${t('common:dataTable.selected')}`}
+              label={`${t('common:dataTable.Selected')}: ${selected.length}`}
               onDelete={selected.length ? handleClearSelection : undefined}
             />
             {!noBulkSelection &&

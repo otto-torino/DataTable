@@ -3,7 +3,7 @@ import  { T } from "ramda"
 import Config from "./Config";
 
 export default {
-  size: 'small',
+  size: Config.size,
   selectable: false,
   noBulkSelection: false,
   noAllSelection: false,
@@ -17,4 +17,5 @@ export default {
   fullTextSearchFields: [],
   onExpandRowCondition: T,
   selectOnRowClick: Config.selectOnRowClick,
+  highlightSelectedRows: Config.highlightSelectedRows,
 }

@@ -1,4 +1,5 @@
 export default {
+  size: 'small',
   defaultPageSize: 10,
   defaultSortField: 'id',
   defaultSortDirection: 'asc',
@@ -6,4 +7,5 @@ export default {
   defaultDateFormat: 'YYYY-MM-DD',
   debounceTime: 500,
   selectOnRowClick: false,
+  highlightSelectedRows: true,
 }

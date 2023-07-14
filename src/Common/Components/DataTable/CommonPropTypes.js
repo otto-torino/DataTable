@@ -91,4 +91,6 @@ export default {
   noColumnsResizing: PropTypes.bool,
   // disable first and last columns sticky position
   noSticky: PropTypes.bool,
+  // highlight selected rows
+  highlightSelectedRows: PropTypes.bool,
 }

@@ -93,6 +93,7 @@ If using the MUI adapter:
 |noBulkSelection|bool|false|false|Disable bulk selection (page and all rows)|
 |noAllSelection|bool|false|false|Disable all rows selection|
 |selectOnRowClick|bool|false|true|If true the record can be selected clicking everywhere in the row|
+!highlightSelectedRows|bool|false|true|If tre selected rows are highlighted (bg color)|
 |model|object|true||The model represented by the table (see below sections)|
 |data|array|true||The table data|
 |onRefetch|function|false||A function which activate the refetch button and it's called when clicking it|
