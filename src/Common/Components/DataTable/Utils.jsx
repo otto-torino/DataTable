@@ -38,7 +38,7 @@ export const getRawValue = (record, field) => {
         case 'date':
             return dayjs(raw).format(Config.defaultDateFormat)
         case 'boolean':
-            return raw ? 'Yes' : 'No'
+            return Boolean(raw)
         case 'hex':
             return isNil(raw) ? null : int2HexWithPrefix(raw)
         default:
@@ -47,11 +47,17 @@ export const getRawValue = (record, field) => {
     }
 }
 
-export const getValue = (record, field, renderContext) => {
+export const getValue = (record, field, renderContext, TrueIcon) => {
     if (field.render) {
         return field.render(record, renderContext)
     }
-    return getRawValue(record, field)
+    const raw = getRawValue(record, field)
+    switch (field.type) {
+        case 'boolean':
+            return raw ? <TrueIcon /> : null
+        default:
+            return raw
+    }
 }
 
 export const getCsvValue = (record, field, renderContext) => {

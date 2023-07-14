@@ -1,3 +1,4 @@
+import { Done } from '@mui/icons-material'
 import {
   TableContainer as MuiTableContainer,
   Table as MuiTable,
@@ -218,3 +219,8 @@ export const DraggableRow = styled(Box)`
 
 // tooltip
 export { Tooltip }
+
+// generic
+export const TrueIcon = styled(Done)`
+  color: green;
+`
