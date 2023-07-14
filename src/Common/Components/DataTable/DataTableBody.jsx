@@ -8,7 +8,7 @@ import { DataTableContext } from './DataTableProvider'
 import { getPrimaryKey, getValue, withStopPropagation } from './Utils'
 
 const DataTableBody = () => {
-  const { TableBody, TableRow, TableCell, Checkbox, Box, IconButton, KeyboardArrowUp, KeyboardArrowDown, Collapse } =
+  const { TableBody, TableRow, TableCell, Checkbox, Box, IconButton, KeyboardArrowUp, KeyboardArrowDown, Collapse, TrueIcon } =
     useContext(DataTableContext)
   const {
     selectable,
@@ -55,7 +55,7 @@ const DataTableBody = () => {
               {displayColumns.map((column, idx) => {
                 return (
                   <TableCell stickyLeft={idx === 0 && !noSticky} key={column.id}>
-                    {getValue(record, column, renderContext)}
+                    {getValue(record, column, renderContext, TrueIcon)}
                   </TableCell>
                 )
               })}

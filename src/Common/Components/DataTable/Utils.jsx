@@ -1,5 +1,14 @@
-import { compose, curry, either, filter, isNil, prop, propEq } from "ramda"
+import dayjs from "dayjs"
+import { compose, curry, either, filter, identity, ifElse, isEmpty, isNil, prop, propEq } from "ramda"
+import Config from "./Config"
 import { BULK_ACTION_TYPE, RECORD_ACTION_TYPE } from "./Constants"
+
+// hex
+export const int2Hex = ifElse(either(isNil, isEmpty), identity, (num) => num.toString(16).toUpperCase())
+export const hex2Int = ifElse(either(isNil, isEmpty), identity, (hex) => parseInt(hex, 16))
+export const hexPrefix = (hex) => `0x${hex}`
+export const int2HexWithPrefix = compose(hexPrefix, int2Hex, (num) => parseInt(num))
+
 
 // model related utils
 export const getPrimaryKey = curry((model, record) => {
@@ -24,19 +33,31 @@ export const getRawValue = (record, field) => {
             return parseInt(raw)
         case 'float':
             return parseFloat(raw)
+        case 'datetime':
+            return dayjs(raw).format(Config.defaultDateTimeFormat)
+        case 'date':
+            return dayjs(raw).format(Config.defaultDateFormat)
         case 'boolean':
-            return raw
+            return Boolean(raw)
+        case 'hex':
+            return isNil(raw) ? null : int2HexWithPrefix(raw)
         default:
             return raw
             
     }
 }
 
-export const getValue = (record, field, renderContext) => {
+export const getValue = (record, field, renderContext, TrueIcon) => {
     if (field.render) {
         return field.render(record, renderContext)
     }
-    return getRawValue(record, field)
+    const raw = getRawValue(record, field)
+    switch (field.type) {
+        case 'boolean':
+            return raw ? <TrueIcon /> : null
+        default:
+            return raw
+    }
 }
 
 export const getCsvValue = (record, field, renderContext) => {

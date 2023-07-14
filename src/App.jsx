@@ -26,12 +26,12 @@ function App() {
   const [isVisible, setIsVisible] = useState(true)
 
   const qsAdditions = {}
-  // const { data, isFetching, refetch, refreshData, count } = useRtkQuery(
-  //   'campaigns', // dataTableId
-  //   useCampaignsQuery, // rtk endpoint
-  //   qsAdditions, // qs additions
-  //   { field: 'id', direction: 'asc' }, // default sorting
-  // )
+  const { data, isFetching, refetch, refreshData, count } = useRtkQuery(
+    'campaigns', // dataTableId
+    useCampaignsQuery, // rtk endpoint
+    qsAdditions, // qs additions
+    { field: 'id', direction: 'asc' }, // default sorting
+  )
 
   const actions = useMemo(() => [
     {
@@ -66,29 +66,29 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      {/* <div> */}
-      {/*   {isVisible && ( */}
-      {/*     <DataTable */}
-      {/*       variant="rtk" */}
-      {/*       selectable */}
-      {/*       id="campaigns" */}
-      {/*       data={defaultTo([], data?.results)} */}
-      {/*       count={count} */}
-      {/*       qsAdditions={qsAdditions} */}
-      {/*       refreshData={refreshData} */}
-      {/*       model={Campaign} */}
-      {/*       selected={selectedRtk} */}
-      {/*       onSelect={setSelectedRtk} */}
-      {/*       onRefetch={refetch} */}
-      {/*       listDisplay={['id', 'name']} */}
-      {/*       onFilter={() => {}} */}
-      {/*       isFilterFormActive={false} */}
-      {/*       fullTextSearchFields={['name']} */}
-      {/*       isLoading={isFetching} */}
-      {/*       exportApi={(qs) => fetch(`https://www.tazebao.email/api/v1/newsletter/campaign/${apiQueryString(qs)}`)} */}
-      {/*     /> */}
-      {/*   )} */}
-      {/* </div> */}
+      <div>
+        {isVisible && (
+          <DataTable
+            variant="rtk"
+            selectable
+            id="campaigns"
+            data={defaultTo([], data?.results)}
+            count={count}
+            qsAdditions={qsAdditions}
+            refreshData={refreshData}
+            model={Campaign}
+            selected={selectedRtk}
+            onSelect={setSelectedRtk}
+            onRefetch={refetch}
+            listDisplay={['id', 'name']}
+            onFilter={() => {}}
+            isFilterFormActive={false}
+            fullTextSearchFields={['name']}
+            isLoading={isFetching}
+            exportApi={(qs) => fetch(`https://www.tazebao.email/api/v1/newsletter/campaign/${apiQueryString(qs)}`)}
+          />
+        )}
+      </div>
       <div>
         {isVisible && (
           <DataTable
