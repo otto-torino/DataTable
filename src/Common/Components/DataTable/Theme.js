@@ -7,8 +7,19 @@ export const dataTablePalette = (mode) => ({
     contrastText: mode === 'light' ? '#000' : '#fff',
   },
   dataTableToolbar: {
-    main: mode === 'light' ? '#f0f0f0' : '#111',
-    contrastText: mode === 'light' ? '#000' : '#fff',
+    main: mode === 'light' ? '#FEF9EF' : '#111',
+    contrastText: mode === 'light' ? '#fff' : '#fff',
+  },
+  dataTableToolbarIcon: {
+    main: mode === 'light' ? '#227C9D' : '#111',
+    contrastText: mode === 'light' ? '#fff' : '#fff',
+  },
+  dataTableToolbarIconActive: {
+    main: mode === 'light' ? '#FE6D73' : '#111',
+    contrastText: mode === 'light' ? '#fff' : '#fff',
+  },
+  dataTableToolbarSelected: {
+    main: mode === 'light' ? '#16697A' : '#111',
   },
   dataTableToolbarSeparator: {
     main: mode === 'light' ? '#fff' : '#666',

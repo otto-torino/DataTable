@@ -55,7 +55,7 @@ const ExportAction = () => {
     <>
       <Tooltip title={t('common:dataTable.Export')}>
         <IconButton size="small" onClick={handleOpen}>
-          <Save color="primary" />
+          <Save color="dataTableToolbarIcon" />
         </IconButton>
       </Tooltip>
       <Dialog onClose={handleClose} open={isOpen} maxWidth="sm">

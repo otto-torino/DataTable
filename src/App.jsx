@@ -89,7 +89,7 @@ function App() {
             onRefetch={refetch}
             listDisplay={LIST_DISPLAY_RTK}
             onFilter={onFilter}
-            isFilterFormActive={false}
+            isFilterFormActive={true}
             fullTextSearchFields={SEARCH_FIELDS_RTK}
             isLoading={isFetching}
             exportApi={handleExportApi}

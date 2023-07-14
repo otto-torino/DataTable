@@ -54,6 +54,7 @@ const Toolbar = () => {
         <Box direction="row" align="center" gap="0">
           <ToolbarSelection direction="row" align="center" gap=".3rem">
             <Chip
+              color='dataTableToolbarIcon'
               label={`${t('common:dataTable.Selected')}: ${selected.length}`}
               onDelete={selected.length ? handleClearSelection : undefined}
             />
@@ -71,18 +72,18 @@ const Toolbar = () => {
         </Box>
       )}
       <ToolbarActions direction="row" align="center" gap="0">
-        {isLoading && <Loader display="inline-flex" size={18} />}
+        {isLoading && <Loader color='dataTableToolbarIcon' display="inline-flex" size={18} />}
         {!!onRefetch && (
           <Tooltip title={t('common:dataTable.Refresh')}>
             <IconButton size="small" onClick={onRefetch}>
-              <Cached color="primary" />
+              <Cached color="dataTableToolbarIcon" />
             </IconButton>
           </Tooltip>
         )}
         {onFilter && (
           <Tooltip title={t('common:dataTable.Filter')}>
             <IconButton size="small" onClick={handleOpenFilterForm}>
-              <FilterIcon style={CURSOR_POINTER_STYLE} color={isFilterFormActive ? 'secondary' : 'primary'} />
+              <FilterIcon style={CURSOR_POINTER_STYLE} color={isFilterFormActive ? 'dataTableToolbarIconActive' : 'dataTableToolbarIcon'} />
             </IconButton>
           </Tooltip>
         )}
@@ -90,7 +91,7 @@ const Toolbar = () => {
         {!noSettings && (
           <Tooltip title={t('common:dataTable.Settings')}>
             <IconButton size="small" onClick={handleOpenSettings}>
-              <Settings color="primary" />
+              <Settings color="dataTableToolbarIcon" />
             </IconButton>
           </Tooltip>
         )}
