@@ -54,6 +54,7 @@ import {
   Typography,
   Collapse,
   TrueIcon,
+  Chip,
 } from './Styled'
 
 export default {
@@ -97,6 +98,7 @@ export default {
   SelectAll,
   Typography,
   Collapse,
+  Chip,
   TrueIcon,
   MoreVert,
   KeyboardArrowUp,

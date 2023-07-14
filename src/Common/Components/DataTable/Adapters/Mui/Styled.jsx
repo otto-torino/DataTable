@@ -30,6 +30,7 @@ import {
   ListItemText,
   InputAdornment,
   Collapse,
+  Chip,
 } from '@mui/material'
 import styled from 'styled-components'
 
@@ -58,6 +59,7 @@ export { Typography, Collapse }
 
 // table
 export const TableContainer = styled(MuiTableContainer)`
+  background:${({ theme }) => theme.palette.dataTableContainer.main};
   max-width: 100%;
   overflow: auto;
 `
@@ -200,7 +202,6 @@ export const ToolbarContainer = styled.div`
   justify-content: space-between;
 `
 export const ToolbarSelection = styled(Box)`
-  font-weight: 700;
   margin-left: .4rem;
 `
 export const SelectAll = styled(Typography)`
@@ -219,6 +220,9 @@ export const DraggableRow = styled(Box)`
 
 // tooltip
 export { Tooltip }
+
+// chip
+export { Chip }
 
 // generic
 export const TrueIcon = styled(Done)`
