@@ -38,7 +38,7 @@ export const getRawValue = (record, field) => {
         case 'date':
             return dayjs(raw).format(Config.defaultDateFormat)
         case 'boolean':
-            return raw
+            return raw ? 'Yes' : 'No'
         case 'hex':
             return isNil(raw) ? null : int2HexWithPrefix(raw)
         default:

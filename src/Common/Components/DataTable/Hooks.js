@@ -199,7 +199,7 @@ export const useStorageData = ({ id, columns, listDisplay, fromStorage, setPageS
     }
     getData()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id, listDisplay])
+  }, [id])
 
   return { storageData, isIniting }
 }
