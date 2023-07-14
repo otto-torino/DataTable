@@ -1,4 +1,5 @@
 export default {
+  size: 'small',
   defaultPageSize: 10,
   defaultSortField: 'id',
   defaultSortDirection: 'asc',
