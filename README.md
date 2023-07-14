@@ -13,6 +13,7 @@ It's designed to work with MUI, but you can write your own adapter to support ot
 - ramda
 - smooth-dnd
 - react-csv
+- dayjs
 
 If using the RTK variant:
 

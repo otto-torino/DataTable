@@ -1,4 +1,6 @@
+import dayjs from "dayjs"
 import { compose, curry, either, filter, isNil, prop, propEq } from "ramda"
+import Config from "./Config"
 import { BULK_ACTION_TYPE, RECORD_ACTION_TYPE } from "./Constants"
 
 // model related utils
@@ -24,6 +26,10 @@ export const getRawValue = (record, field) => {
             return parseInt(raw)
         case 'float':
             return parseFloat(raw)
+        case 'datetime':
+            return dayjs(raw).format(Config.defaultDateTimeFormat)
+        case 'date':
+            return dayjs(raw).format(Config.defaultDateFormat)
         case 'boolean':
             return raw
         default:
