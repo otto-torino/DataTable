@@ -1,6 +1,6 @@
 import { useContext, useState } from 'react'
-import { CURSOR_POINTER_STYLE } from './Constants'
 
+import { CURSOR_POINTER_STYLE } from './Constants'
 import { DataTableInternalContext } from './DataTableInternalProvider'
 import { DataTableContext } from './DataTableProvider'
 import ExportAction from './ExportAction'
@@ -17,7 +17,7 @@ const Toolbar = () => {
     Button,
     Tooltip,
     IconButton,
-    Typography,
+    Chip,
     Cached,
     FilterAlt,
     FilterAltOff,
@@ -53,26 +53,22 @@ const Toolbar = () => {
       {selectable && (
         <Box direction="row" align="center" gap="0">
           <ToolbarSelection direction="row" align="center" gap=".3rem">
-            {selected.length} <Typography sx={{ fontWeight: 700 }}>{t('common:dataTable.selected')}</Typography>
+            <Chip
+              size="small"
+              label={`${selected.length} ${t('common:dataTable.selected')}`}
+              onDelete={selected.length ? handleClearSelection : undefined}
+            />
+            {!noBulkSelection &&
+              !noAllSelection &&
+              selected.length === displayData.length &&
+              selected.length !== data.length && (
+                <SelectAll component="div">
+                  <Button onClick={handleSelectAll(data)} size="small">
+                    {t('common:dataTable.SelectAll')}
+                  </Button>
+                </SelectAll>
+              )}
           </ToolbarSelection>
-          {selectable &&
-            !noBulkSelection &&
-            !noAllSelection &&
-            selected.length === displayData.length &&
-            selected.length !== data.length && (
-              <SelectAll component="div">
-                <Button onClick={handleSelectAll(data)} size="small">
-                  {t('common:dataTable.SelectAll')}
-                </Button>
-              </SelectAll>
-            )}
-          {selectable && !!selected.length && (
-            <SelectAll component="div">
-              <Button onClick={handleClearSelection} size="small">
-                {t('common:dataTable.ClearSelection')}
-              </Button>
-            </SelectAll>
-          )}
         </Box>
       )}
       <ToolbarActions direction="row" align="center" gap="0">

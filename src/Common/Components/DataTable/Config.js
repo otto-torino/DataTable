@@ -5,5 +5,5 @@ export default {
   defaultDateTimeFormat: 'YYYY-MM-DD HH:mm:ss',
   defaultDateFormat: 'YYYY-MM-DD',
   debounceTime: 500,
-  selectOnRowClick: true,
+  selectOnRowClick: false,
 }

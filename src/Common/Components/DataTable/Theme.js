@@ -1,10 +1,13 @@
 export const dataTablePalette = (mode) => ({
+  dataTableContainer: {
+    main: 'transparent',
+  },
   dataTableContent: {
     main: mode === 'light' ? '#fff' : '#1F212C',
     contrastText: mode === 'light' ? '#000' : '#fff',
   },
   dataTableToolbar: {
-    main: mode === 'light' ? '#e7e7e7' : '#111',
+    main: mode === 'light' ? '#f0f0f0' : '#111',
     contrastText: mode === 'light' ? '#000' : '#fff',
   },
   dataTableToolbarSeparator: {

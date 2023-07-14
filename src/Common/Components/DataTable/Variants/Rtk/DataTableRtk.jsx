@@ -27,6 +27,7 @@ const DataTableRtk = memo((props) => {
     defaultPageSize,
     defaultSortField,
     defaultSortDirection,
+    fullTextSearchFields,
     storePageAndSortInSession,
     listDisplay,
     actions,
@@ -130,7 +131,7 @@ const DataTableRtk = memo((props) => {
         orderBy: sort.field,
         orderType: sort.direction,
       },
-      qsAdditions: { ...qsAdditions, ...(debouncedFullTextSearch ? { search: debouncedFullTextSearch } : {}) },
+      qsAdditions: { ...qsAdditions, ...(debouncedFullTextSearch ? fullTextSearchFields.reduce((acc, curr) => ({...acc, [curr]:  debouncedFullTextSearch }), {}) : {}) },
     })
 
     if (onExpandRow) {

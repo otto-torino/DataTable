@@ -17,6 +17,9 @@ import { apiQueryString } from './Core/Services/Api'
 const LIST_DISPLAY = ['id', 'name', 'maxSpeed']
 const SEARCH_FIELDS = ['name', 'status.code']
 
+const LIST_DISPLAY_RTK = ['id', 'name', 'insertion_datetime', 'view_online', 'subject']
+const SEARCH_FIELDS_RTK = ['name']
+
 function App() {
   const mode = 'light'
   const theme = useMemo(() => getTheme(mode), [mode])
@@ -25,7 +28,7 @@ function App() {
   const [selectedRtk, setSelectedRtk] = useState([])
   const [isVisible, setIsVisible] = useState(true)
 
-  const qsAdditions = {}
+  const qsAdditions = useMemo(() => ({}), [])
   const { data, isFetching, refetch, refreshData, count } = useRtkQuery(
     'campaigns', // dataTableId
     useCampaignsQuery, // rtk endpoint
@@ -64,6 +67,10 @@ function App() {
   }, [])
   const onExpandRowCondition = useCallback(({ id }) => id % 2 === 0, [])
 
+  const handleExportApi = useCallback((qs) => fetch(`https://www.tazebao.email/api/v1/newsletter/campaign/${apiQueryString(qs)}`), [])
+
+  const dataRtk = useMemo(() => defaultTo([], data?.results), [data?.results])
+
   return (
     <ThemeProvider theme={theme}>
       <div>
@@ -72,7 +79,7 @@ function App() {
             variant="rtk"
             selectable
             id="campaigns"
-            data={defaultTo([], data?.results)}
+            data={dataRtk}
             count={count}
             qsAdditions={qsAdditions}
             refreshData={refreshData}
@@ -80,12 +87,12 @@ function App() {
             selected={selectedRtk}
             onSelect={setSelectedRtk}
             onRefetch={refetch}
-            listDisplay={['id', 'name']}
-            onFilter={() => {}}
+            listDisplay={LIST_DISPLAY_RTK}
+            onFilter={onFilter}
             isFilterFormActive={false}
-            fullTextSearchFields={['name']}
+            fullTextSearchFields={SEARCH_FIELDS_RTK}
             isLoading={isFetching}
-            exportApi={(qs) => fetch(`https://www.tazebao.email/api/v1/newsletter/campaign/${apiQueryString(qs)}`)}
+            exportApi={handleExportApi}
           />
         )}
       </div>
