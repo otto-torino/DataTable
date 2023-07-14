@@ -63,7 +63,7 @@ const Toolbar = () => {
               selected.length === displayData.length &&
               selected.length !== data.length && (
                 <SelectAll component="div">
-                  <Button onClick={handleSelectAll(data)} size="small">
+                  <Button onClick={handleSelectAll(data)} size="small" color='dataTableToolbarSelectAll'>
                     {t('common:dataTable.SelectAll')}
                   </Button>
                 </SelectAll>

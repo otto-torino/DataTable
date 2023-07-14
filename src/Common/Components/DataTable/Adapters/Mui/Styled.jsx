@@ -202,6 +202,7 @@ export const ToolbarContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  border-radius: 8px 8px 0 0;
 `
 export const ToolbarSelection = styled(Box)`
   margin-left: .4rem;
