@@ -116,6 +116,8 @@ export const Table = styled(MuiTable)`
 export const TableHead = styled(MuiTableHead)``
 export const TableBody = styled(MuiTableBody)``
 export const TableRow = styled(MuiTableRow)`
+  ${({ theme, highlighted }) => highlighted ? `td { background: ${theme.palette.dataTableRowHighlighted.main} !important; }` : ''};
+
   &:hover {
     td {
       background: ${({ theme }) => theme.palette.dataTableRowHover.main} !important;

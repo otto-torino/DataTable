@@ -30,6 +30,9 @@ export const dataTablePalette = (mode) => ({
   dataTableRowHover: {
     main: mode === 'light' ? '#f7f7f7' : '#111',
   },
+  dataTableRowHighlighted: {
+    main: mode === 'light' ? '#00FFC5' : '#111',
+  },
   dataTableSticky: {
     main: mode === 'light' ? '#fff' : '#000',
   }

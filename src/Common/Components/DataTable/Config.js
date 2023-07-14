@@ -7,4 +7,5 @@ export default {
   defaultDateFormat: 'YYYY-MM-DD',
   debounceTime: 500,
   selectOnRowClick: false,
+  highlightSelectedRows: true,
 }

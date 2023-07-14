@@ -17,4 +17,5 @@ export default {
   fullTextSearchFields: [],
   onExpandRowCondition: T,
   selectOnRowClick: Config.selectOnRowClick,
+  highlightSelectedRows: Config.highlightSelectedRows,
 }

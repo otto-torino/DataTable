@@ -29,6 +29,7 @@ const DataTableBody = () => {
     onAction,
     colSpan,
     selectOnRowClick,
+    highlightSelectedRows,
   } = useContext(DataTableInternalContext)
   return (
     <TableBody>
@@ -43,6 +44,7 @@ const DataTableBody = () => {
           <React.Fragment key={pk}>
             <TableRow
               key={pk}
+              highlighted={highlightSelectedRows && isSelected}
               onClick={
                 selectOnRowClick ? () => handleSelectRecord(record)({ target: { checked: !isSelected } }) : undefined
               }
