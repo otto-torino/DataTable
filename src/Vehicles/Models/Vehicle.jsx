@@ -34,7 +34,7 @@ export default {
       id: 'status.code',
       label: 'Status',
       type: 'string',
-      render: (record) => {
+      render: (record, renderContext) => {
         return (
           <div>
             <span style={{ color: 'blue' }}>{record.status.code}</span>
@@ -42,6 +42,7 @@ export default {
         )
       },
       csvValue: record => record.status.id,
+      sortingValue: record => record.status.id,
     },
   ],
 }
