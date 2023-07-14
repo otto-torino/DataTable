@@ -1,7 +1,14 @@
 import dayjs from "dayjs"
-import { compose, curry, either, filter, isNil, prop, propEq } from "ramda"
+import { compose, curry, either, filter, identity, ifElse, isEmpty, isNil, prop, propEq } from "ramda"
 import Config from "./Config"
 import { BULK_ACTION_TYPE, RECORD_ACTION_TYPE } from "./Constants"
+
+// hex
+export const int2Hex = ifElse(either(isNil, isEmpty), identity, (num) => num.toString(16).toUpperCase())
+export const hex2Int = ifElse(either(isNil, isEmpty), identity, (hex) => parseInt(hex, 16))
+export const hexPrefix = (hex) => `0x${hex}`
+export const int2HexWithPrefix = compose(hexPrefix, int2Hex, (num) => parseInt(num))
+
 
 // model related utils
 export const getPrimaryKey = curry((model, record) => {
@@ -32,6 +39,8 @@ export const getRawValue = (record, field) => {
             return dayjs(raw).format(Config.defaultDateFormat)
         case 'boolean':
             return raw
+        case 'hex':
+            return isNil(raw) ? null : int2HexWithPrefix(raw)
         default:
             return raw
             
